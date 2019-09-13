@@ -55,6 +55,8 @@
             this.txtPrenume = new System.Windows.Forms.TextBox();
             this.txtNume = new System.Windows.Forms.TextBox();
             this.txtCNP = new System.Windows.Forms.TextBox();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -78,6 +80,8 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.btnClear);
+            this.splitContainer1.Panel2.Controls.Add(this.btnUpdate);
             this.splitContainer1.Panel2.Controls.Add(this.label10);
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.label8);
@@ -142,6 +146,7 @@
             this.gridPeople.Size = new System.Drawing.Size(700, 381);
             this.gridPeople.TabIndex = 0;
             this.gridPeople.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridPeople_CellClick);
+            this.gridPeople.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridPeople_RowEnter);
             // 
             // label10
             // 
@@ -337,6 +342,26 @@
             this.txtCNP.Size = new System.Drawing.Size(154, 20);
             this.txtCNP.TabIndex = 0;
             // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Location = new System.Drawing.Point(15, 245);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(114, 23);
+            this.btnUpdate.TabIndex = 22;
+            this.btnUpdate.Text = "Salvare modificari";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.BtnUpdate_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(135, 245);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(75, 23);
+            this.btnClear.TabIndex = 24;
+            this.btnClear.Text = "Clear fields";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -390,6 +415,8 @@
         private System.Windows.Forms.ComboBox cmbC6;
         private System.Windows.Forms.ComboBox cmbC7;
         private System.Windows.Forms.ComboBox cmbC1;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnClear;
     }
 }
 
