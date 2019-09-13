@@ -24,6 +24,7 @@ namespace LoginManager
 
         public string UpdateUserString { get; set; }
         public string InsertUserString { get; set; }
+        public string DeleteUserString { get; set; }
         public string CheckIfUserExistsString { get; set; }
         public frmMain()
 
@@ -37,6 +38,7 @@ namespace LoginManager
             QueryUsersString = ConfigurationManager.AppSettings["QueryUsers"];
             UpdateUserString = ConfigurationManager.AppSettings["UpdateUser"];
             InsertUserString = ConfigurationManager.AppSettings["InsertUser"];
+            DeleteUserString = ConfigurationManager.AppSettings["DeleteUser"];
             CheckIfUserExistsString = ConfigurationManager.AppSettings["CheckIfUserExists"];
             depHierarchyQueries = new List<string>();
             for (int i = 1; i <= depHierarchyCount; i++)
@@ -251,36 +253,7 @@ namespace LoginManager
 
         }
 
-        private void BtnInsert_Click(object sender, EventArgs e)
-        {
-            var qInsertUser = string.Format(InsertUserString, txtNume.Text,
-                                                txtPrenume.Text,
-                                                txtCNP.Text,
-                                                txtLogin.Text,
-                                                cmbC1.SelectedValue,
-                                                cmbC2.SelectedValue,
-                                                cmbC3.SelectedValue,
-                                                cmbC4.SelectedValue,
-                                                cmbC5.SelectedValue,
-                                                cmbC6.SelectedValue,
-                                                cmbC7.SelectedValue);
-            var qCheckUser = string.Format(CheckIfUserExistsString, txtLogin.Text);
 
-            using (var connection = new SqlConnection(AdminAplicConnectionString))
-            {
-                var command = new SqlCommand(qCheckUser, connection);
-                connection.Open();
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        MessageBox.Show(string.Format("Exista deja un utilziator cu acest nume!!"), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-
-                    }
-                }
-            }
-        }
 
         private void BtnClear_Click(object sender, EventArgs e)
         {
@@ -295,6 +268,29 @@ namespace LoginManager
             cmbC5.SelectedValue = -1;
             cmbC6.SelectedValue = -1;
             cmbC7.SelectedValue = -1;
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            var qDeleteUser = string.Format(DeleteUserString, txtLogin.Text);
+            if (MessageBox.Show(string.Format("Userul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUser), "USER NOU", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+
+                using (var connection = new SqlConnection(AdminAplicConnectionString))
+                {
+                    var command = new SqlCommand(qDeleteUser, connection);
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        ReloadGrid();
+                    }
+                    catch (Exception xcp)
+                    {
+                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }
