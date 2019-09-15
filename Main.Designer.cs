@@ -32,7 +32,20 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtSearch = new System.Windows.Forms.TextBox();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.gridPeople = new System.Windows.Forms.DataGridView();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+            this.gridRoles = new System.Windows.Forms.DataGridView();
+            this.lblTipAcces = new System.Windows.Forms.Label();
+            this.lblAplicatie = new System.Windows.Forms.Label();
+            this.btnAddRole = new System.Windows.Forms.Button();
+            this.cmbTipAcces = new System.Windows.Forms.ComboBox();
+            this.cmbAplicatie = new System.Windows.Forms.ComboBox();
+            this.btnDeleteRole = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -55,9 +68,6 @@
             this.txtPrenume = new System.Windows.Forms.TextBox();
             this.txtNume = new System.Windows.Forms.TextBox();
             this.txtCNP = new System.Windows.Forms.TextBox();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.btnClear = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -66,7 +76,19 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridPeople)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+            this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
+            this.splitContainer5.Panel1.SuspendLayout();
+            this.splitContainer5.Panel2.SuspendLayout();
+            this.splitContainer5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridRoles)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -107,7 +129,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.txtNume);
             this.splitContainer1.Panel2.Controls.Add(this.txtCNP);
             this.splitContainer1.Size = new System.Drawing.Size(1312, 450);
-            this.splitContainer1.SplitterDistance = 700;
+            this.splitContainer1.SplitterDistance = 611;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -123,18 +145,37 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.gridPeople);
-            this.splitContainer2.Size = new System.Drawing.Size(700, 450);
-            this.splitContainer2.SplitterDistance = 65;
+            this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
+            this.splitContainer2.Size = new System.Drawing.Size(611, 450);
+            this.splitContainer2.SplitterDistance = 37;
             this.splitContainer2.TabIndex = 0;
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(3, 12);
+            this.txtSearch.Location = new System.Drawing.Point(12, 12);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(171, 20);
+            this.txtSearch.Size = new System.Drawing.Size(210, 20);
             this.txtSearch.TabIndex = 0;
+            this.txtSearch.Text = "Cautare dupa CNP, Nume sau Login";
             this.txtSearch.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtSearch_KeyUp);
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.gridPeople);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
+            this.splitContainer3.Size = new System.Drawing.Size(611, 409);
+            this.splitContainer3.SplitterDistance = 115;
+            this.splitContainer3.TabIndex = 1;
             // 
             // gridPeople
             // 
@@ -145,10 +186,150 @@
             this.gridPeople.Location = new System.Drawing.Point(0, 0);
             this.gridPeople.Name = "gridPeople";
             this.gridPeople.ReadOnly = true;
-            this.gridPeople.Size = new System.Drawing.Size(700, 381);
+            this.gridPeople.Size = new System.Drawing.Size(611, 115);
             this.gridPeople.TabIndex = 0;
             this.gridPeople.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridPeople_CellClick);
             this.gridPeople.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridPeople_RowEnter);
+            // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Name = "splitContainer4";
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.splitContainer5);
+            this.splitContainer4.Size = new System.Drawing.Size(611, 290);
+            this.splitContainer4.SplitterDistance = 341;
+            this.splitContainer4.TabIndex = 0;
+            // 
+            // splitContainer5
+            // 
+            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer5.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer5.Name = "splitContainer5";
+            this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer5.Panel1
+            // 
+            this.splitContainer5.Panel1.Controls.Add(this.gridRoles);
+            // 
+            // splitContainer5.Panel2
+            // 
+            this.splitContainer5.Panel2.Controls.Add(this.lblTipAcces);
+            this.splitContainer5.Panel2.Controls.Add(this.lblAplicatie);
+            this.splitContainer5.Panel2.Controls.Add(this.btnAddRole);
+            this.splitContainer5.Panel2.Controls.Add(this.cmbTipAcces);
+            this.splitContainer5.Panel2.Controls.Add(this.cmbAplicatie);
+            this.splitContainer5.Panel2.Controls.Add(this.btnDeleteRole);
+            this.splitContainer5.Size = new System.Drawing.Size(341, 290);
+            this.splitContainer5.SplitterDistance = 145;
+            this.splitContainer5.TabIndex = 0;
+            // 
+            // gridRoles
+            // 
+            this.gridRoles.AllowUserToAddRows = false;
+            this.gridRoles.AllowUserToDeleteRows = false;
+            this.gridRoles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridRoles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridRoles.Location = new System.Drawing.Point(0, 0);
+            this.gridRoles.Name = "gridRoles";
+            this.gridRoles.ReadOnly = true;
+            this.gridRoles.Size = new System.Drawing.Size(341, 145);
+            this.gridRoles.TabIndex = 0;
+            this.gridRoles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_CellClick);
+            this.gridRoles.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_RowEnter);
+            // 
+            // lblTipAcces
+            // 
+            this.lblTipAcces.AutoSize = true;
+            this.lblTipAcces.Location = new System.Drawing.Point(160, 19);
+            this.lblTipAcces.Name = "lblTipAcces";
+            this.lblTipAcces.Size = new System.Drawing.Size(62, 13);
+            this.lblTipAcces.TabIndex = 5;
+            this.lblTipAcces.Text = "lblTipAcces";
+            // 
+            // lblAplicatie
+            // 
+            this.lblAplicatie.AutoSize = true;
+            this.lblAplicatie.Location = new System.Drawing.Point(12, 19);
+            this.lblAplicatie.Name = "lblAplicatie";
+            this.lblAplicatie.Size = new System.Drawing.Size(57, 13);
+            this.lblAplicatie.TabIndex = 4;
+            this.lblAplicatie.Text = "lblAplicatie";
+            // 
+            // btnAddRole
+            // 
+            this.btnAddRole.Location = new System.Drawing.Point(267, 55);
+            this.btnAddRole.Name = "btnAddRole";
+            this.btnAddRole.Size = new System.Drawing.Size(70, 23);
+            this.btnAddRole.TabIndex = 3;
+            this.btnAddRole.Text = "Adauga";
+            this.btnAddRole.UseVisualStyleBackColor = true;
+            this.btnAddRole.Click += new System.EventHandler(this.BtnAddRole_Click);
+            // 
+            // cmbTipAcces
+            // 
+            this.cmbTipAcces.FormattingEnabled = true;
+            this.cmbTipAcces.Location = new System.Drawing.Point(140, 55);
+            this.cmbTipAcces.Name = "cmbTipAcces";
+            this.cmbTipAcces.Size = new System.Drawing.Size(121, 21);
+            this.cmbTipAcces.TabIndex = 2;
+            // 
+            // cmbAplicatie
+            // 
+            this.cmbAplicatie.FormattingEnabled = true;
+            this.cmbAplicatie.Location = new System.Drawing.Point(13, 55);
+            this.cmbAplicatie.Name = "cmbAplicatie";
+            this.cmbAplicatie.Size = new System.Drawing.Size(121, 21);
+            this.cmbAplicatie.TabIndex = 1;
+            // 
+            // btnDeleteRole
+            // 
+            this.btnDeleteRole.Location = new System.Drawing.Point(228, 14);
+            this.btnDeleteRole.Name = "btnDeleteRole";
+            this.btnDeleteRole.Size = new System.Drawing.Size(109, 23);
+            this.btnDeleteRole.TabIndex = 0;
+            this.btnDeleteRole.Text = "Sterge";
+            this.btnDeleteRole.UseVisualStyleBackColor = true;
+            this.btnDeleteRole.Click += new System.EventHandler(this.BtnDeleteRole_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.Image")));
+            this.btnDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDelete.Location = new System.Drawing.Point(364, 245);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(124, 33);
+            this.btnDelete.TabIndex = 25;
+            this.btnDelete.Text = "Sterge user";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
+            this.btnClear.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnClear.Location = new System.Drawing.Point(157, 245);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(101, 33);
+            this.btnClear.TabIndex = 24;
+            this.btnClear.Text = "Clear fields";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Image = ((System.Drawing.Image)(resources.GetObject("btnUpdate.Image")));
+            this.btnUpdate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnUpdate.Location = new System.Drawing.Point(15, 245);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(136, 32);
+            this.btnUpdate.TabIndex = 22;
+            this.btnUpdate.Text = "Salvare modificari";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.BtnUpdate_Click);
             // 
             // label10
             // 
@@ -226,7 +407,7 @@
             this.cmbC2.Location = new System.Drawing.Point(364, 118);
             this.cmbC2.Name = "cmbC2";
             this.cmbC2.Size = new System.Drawing.Size(232, 21);
-            this.cmbC2.TabIndex = 14;
+            this.cmbC2.TabIndex = 5;
             // 
             // cmbC3
             // 
@@ -234,7 +415,7 @@
             this.cmbC3.Location = new System.Drawing.Point(83, 144);
             this.cmbC3.Name = "cmbC3";
             this.cmbC3.Size = new System.Drawing.Size(244, 21);
-            this.cmbC3.TabIndex = 13;
+            this.cmbC3.TabIndex = 6;
             // 
             // cmbC4
             // 
@@ -242,7 +423,7 @@
             this.cmbC4.Location = new System.Drawing.Point(364, 144);
             this.cmbC4.Name = "cmbC4";
             this.cmbC4.Size = new System.Drawing.Size(232, 21);
-            this.cmbC4.TabIndex = 12;
+            this.cmbC4.TabIndex = 7;
             // 
             // cmbC5
             // 
@@ -250,7 +431,7 @@
             this.cmbC5.Location = new System.Drawing.Point(83, 171);
             this.cmbC5.Name = "cmbC5";
             this.cmbC5.Size = new System.Drawing.Size(244, 21);
-            this.cmbC5.TabIndex = 11;
+            this.cmbC5.TabIndex = 8;
             // 
             // cmbC6
             // 
@@ -258,7 +439,7 @@
             this.cmbC6.Location = new System.Drawing.Point(364, 172);
             this.cmbC6.Name = "cmbC6";
             this.cmbC6.Size = new System.Drawing.Size(232, 21);
-            this.cmbC6.TabIndex = 10;
+            this.cmbC6.TabIndex = 9;
             // 
             // cmbC7
             // 
@@ -266,7 +447,7 @@
             this.cmbC7.Location = new System.Drawing.Point(83, 198);
             this.cmbC7.Name = "cmbC7";
             this.cmbC7.Size = new System.Drawing.Size(244, 21);
-            this.cmbC7.TabIndex = 9;
+            this.cmbC7.TabIndex = 10;
             // 
             // cmbC1
             // 
@@ -274,7 +455,7 @@
             this.cmbC1.Location = new System.Drawing.Point(83, 117);
             this.cmbC1.Name = "cmbC1";
             this.cmbC1.Size = new System.Drawing.Size(244, 21);
-            this.cmbC1.TabIndex = 8;
+            this.cmbC1.TabIndex = 4;
             // 
             // label3
             // 
@@ -321,21 +502,21 @@
             this.txtLogin.Location = new System.Drawing.Point(83, 40);
             this.txtLogin.Name = "txtLogin";
             this.txtLogin.Size = new System.Drawing.Size(154, 20);
-            this.txtLogin.TabIndex = 3;
+            this.txtLogin.TabIndex = 1;
             // 
             // txtPrenume
             // 
             this.txtPrenume.Location = new System.Drawing.Point(83, 92);
             this.txtPrenume.Name = "txtPrenume";
             this.txtPrenume.Size = new System.Drawing.Size(154, 20);
-            this.txtPrenume.TabIndex = 2;
+            this.txtPrenume.TabIndex = 3;
             // 
             // txtNume
             // 
             this.txtNume.Location = new System.Drawing.Point(83, 66);
             this.txtNume.Name = "txtNume";
             this.txtNume.Size = new System.Drawing.Size(154, 20);
-            this.txtNume.TabIndex = 1;
+            this.txtNume.TabIndex = 2;
             // 
             // txtCNP
             // 
@@ -343,36 +524,6 @@
             this.txtCNP.Name = "txtCNP";
             this.txtCNP.Size = new System.Drawing.Size(154, 20);
             this.txtCNP.TabIndex = 0;
-            // 
-            // btnUpdate
-            // 
-            this.btnUpdate.Location = new System.Drawing.Point(15, 245);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(114, 23);
-            this.btnUpdate.TabIndex = 22;
-            this.btnUpdate.Text = "Salvare modificari";
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.BtnUpdate_Click);
-            // 
-            // btnClear
-            // 
-            this.btnClear.Location = new System.Drawing.Point(135, 245);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(75, 23);
-            this.btnClear.TabIndex = 24;
-            this.btnClear.Text = "Clear fields";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Location = new System.Drawing.Point(364, 244);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnDelete.TabIndex = 25;
-            this.btnDelete.Text = "Sterge user";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
             // 
             // frmMain
             // 
@@ -383,6 +534,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.Text = "Login Manager";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -394,7 +546,20 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+            this.splitContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridPeople)).EndInit();
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
+            this.splitContainer4.ResumeLayout(false);
+            this.splitContainer5.Panel1.ResumeLayout(false);
+            this.splitContainer5.Panel2.ResumeLayout(false);
+            this.splitContainer5.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
+            this.splitContainer5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridRoles)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -430,6 +595,16 @@
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.SplitContainer splitContainer4;
+        private System.Windows.Forms.SplitContainer splitContainer5;
+        private System.Windows.Forms.DataGridView gridRoles;
+        private System.Windows.Forms.Button btnAddRole;
+        private System.Windows.Forms.ComboBox cmbTipAcces;
+        private System.Windows.Forms.ComboBox cmbAplicatie;
+        private System.Windows.Forms.Button btnDeleteRole;
+        private System.Windows.Forms.Label lblTipAcces;
+        private System.Windows.Forms.Label lblAplicatie;
     }
 }
 
