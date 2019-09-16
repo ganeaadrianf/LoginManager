@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
 using System.Data.SqlClient;
+using LoginManager.Classes;
+using PasswordUtility.PasswordGenerator;
+using Microsoft.SqlServer.Management.Smo;
 
 namespace LoginManager
 {
@@ -33,6 +36,19 @@ namespace LoginManager
         public string DeleteUser { get; set; }
         public string DeleteUserRole { get; set; }
         public string CheckIfUserExists { get; set; }
+        public string CheckIfLoginExists { get; set; }
+        public string CheckIfUserMappedToRole { get; set; }
+        public string CreateLogin { get; set; }
+        public string ResetLogin { get; set; }
+
+        string generatedPass = string.Empty;
+
+        private Dictionary<string, string> sqlServerConnectionStrings = new Dictionary<string, string>();
+
+        public List<DatabaseApplication> apps = new List<DatabaseApplication>();
+        private List<Classes.DatabaseRole> access = new List<Classes.DatabaseRole>();
+
+
         public frmMain()
 
         {
@@ -41,6 +57,11 @@ namespace LoginManager
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
+            lblTipAcces.Text = string.Empty;
+            lblAplicatie.Text = string.Empty;
+            btnDeleteRole.Visible = false;
+
+            LoadConnectionStrings();
             AdminAplicConnectionString = ConfigurationManager.ConnectionStrings["AdminAplicConnectionString"].ConnectionString;
             QueryUsers = ConfigurationManager.AppSettings["QueryUsers"];
             QueryUserRoles = ConfigurationManager.AppSettings["QueryUserRoles"];
@@ -50,9 +71,13 @@ namespace LoginManager
             DeleteUser = ConfigurationManager.AppSettings["DeleteUser"];
             DeleteUserRole = ConfigurationManager.AppSettings["DeleteUserRole"];
             CheckIfUserExists = ConfigurationManager.AppSettings["CheckIfUserExists"];
+            CheckIfLoginExists = ConfigurationManager.AppSettings["CheckIfLoginExists"];
+            CheckIfUserMappedToRole = ConfigurationManager.AppSettings["CheckIfUserMappedToRole"];
+            CreateLogin = ConfigurationManager.AppSettings["CreateLogin"];
+            ResetLogin = ConfigurationManager.AppSettings["ResetLogin"];
 
             AplicatieList = ConfigurationManager.AppSettings["AplicatieList"];
-            TipAccessList= ConfigurationManager.AppSettings["TipAccesList"];
+            TipAccessList = ConfigurationManager.AppSettings["TipAccesList"];
 
             depHierarchyQueries = new List<string>();
             for (int i = 1; i <= depHierarchyCount; i++)
@@ -68,6 +93,14 @@ namespace LoginManager
 
             LoadComboboxes();
             ReloadPeople();
+        }
+        private void LoadConnectionStrings()
+        {
+            var numberOfSQLServers = Int32.Parse(ConfigurationManager.AppSettings["NumberOfSQLServers"]);
+            for (int i = 0; i < numberOfSQLServers; i++)
+            {
+                sqlServerConnectionStrings.Add(string.Format("SQLSERVER{0}", i + 1), ConfigurationManager.ConnectionStrings[string.Format("SQLServer{0}", i + 1)].ConnectionString);
+            }
         }
 
         private void ReloadPeople(string searchParam = null)
@@ -106,11 +139,81 @@ namespace LoginManager
                     dt.Load(reader);
                     gridRoles.AutoGenerateColumns = true;
                     gridRoles.DataSource = dt;
+                    btnDeleteRole.Visible = dt.Rows.Count > 0;
+                    if (dt.Rows.Count == 0)
+                    {
+                        lblAplicatie.Text = string.Empty;
+                        lblTipAcces.Text = string.Empty;
+                        lblServerInfo.Text = "";
+                        lblLoginInfo.Text = "";
+                    }
+                    else
+                    {
+
+                        CheckSQLLogin(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString);
+                        CheckDatabaseRole(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString.Replace("Initial Catalog=master", "Initial Catalog ="+apps.Where(a=>a.AppName==lblAplicatie.Text).First().DBName), lblTipAcces.Text);
+                    }
                     gridRoles.Refresh();
 
                 }
             }
+
         }
+        private void CheckSQLLogin(string connString)
+        {
+            var qCheckLogin = string.Format(CheckIfLoginExists, txtLogin.Text);
+
+            using (var connection = new SqlConnection(connString))
+            {
+                var command = new SqlCommand(qCheckLogin, connection);
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        lblLoginInfo.ForeColor = Color.Black;
+                        lblLoginInfo.Text = "       Loginul exista pe serverul de mai sus.";
+                        btnResetPass.Visible = true;
+                        btnCreateLogin.Visible = false;
+                    }
+                    else
+                    {
+                        lblLoginInfo.ForeColor = Color.Red;
+                        lblLoginInfo.Text = "       Nu exista un login cu acest nume!!";
+                        btnResetPass.Visible = false;
+                        btnCreateLogin.Visible = true;
+                    }
+                }
+            }
+        }
+
+
+        private void CheckDatabaseRole(string connString,string dbRole)
+        {
+            var qCheckDBRole = string.Format(CheckIfUserMappedToRole, txtLogin.Text, dbRole);
+
+            using (var connection = new SqlConnection(connString))
+            {
+                var command = new SqlCommand(qCheckDBRole, connection);
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        lblUserInRole.ForeColor = Color.Black;
+                        lblUserInRole.Text = "       Userul este in rolul"+dbRole;
+                        btnAddLoginToRole.Visible = true;
+                    }
+                    else
+                    {
+                        lblUserInRole.ForeColor = Color.Red;
+                        lblUserInRole.Text = "       Userul nu are rolul: "+dbRole;
+                        btnAddLoginToRole.Visible = false;
+                    }
+                }
+            }
+        }
+
 
 
         private void LoadComboboxes()
@@ -158,7 +261,7 @@ namespace LoginManager
 
         private void LoadAplicatieCombobox()
         {
-
+            DataTable dt;
             var qAplicatie = string.Format(AplicatieList);
 
             using (var connection = new SqlConnection(AdminAplicConnectionString))
@@ -168,30 +271,45 @@ namespace LoginManager
                 using (var reader = command.ExecuteReader())
                 {
 
-                    DataTable dt = new DataTable();
+                    dt = new DataTable();
 
                     dt.Load(reader);
-                    var emptyRow = dt.NewRow();
-                    emptyRow["BazaDate"] = -1;
-                    emptyRow["Aplicatie"] = string.Empty;
-                    dt.Rows.Add(emptyRow);
-                    var dv = new DataView(dt, "", "Aplicatie", DataViewRowState.CurrentRows);
-                    
-                    cmbAplicatie.DataSource = dv;
-                    cmbAplicatie.DisplayMember = "Aplicatie";
-                    cmbAplicatie.ValueMember = "BazaDate";
 
 
 
-                    cmbAplicatie.Refresh();
+
 
                 }
             }
+            apps.Add(new DatabaseApplication() { AppName = "", DBName = "", DBServer = "" });
+
+            foreach (DataRow row in dt.Rows)
+            {
+                apps.Add(new DatabaseApplication() { AppName = row["AppName"].ToString(), DBName = row["DBName"].ToString(), DBServer = row["DBServer"].ToString(), ConnectionString = sqlServerConnectionStrings[row["DBServer"].ToString().ToUpper()] });
+            }
+
+
+            //var emptyRow = dt.NewRow();
+            //emptyRow["BazaDate"] = -1;
+            //emptyRow["Aplicatie"] = string.Empty;
+            //dt.Rows.Add(emptyRow);
+            //var dv = new DataView(dt, "", "Aplicatie", DataViewRowState.CurrentRows);
+
+            //cmbAplicatie.DataSource = dv;
+            //cmbAplicatie.DisplayMember = "Aplicatie";
+            //cmbAplicatie.ValueMember = "BazaDate";
+
+            cmbAplicatie.DataSource = apps;
+            cmbAplicatie.DisplayMember = "AppName";
+            cmbAplicatie.ValueMember = "ConnectionInfo";
+
+
+            cmbAplicatie.Refresh();
         }
 
         private void LoadTipAccesCombobox()
         {
-
+            DataTable dt;
             var qtipAcces = string.Format(TipAccessList);
 
             using (var connection = new SqlConnection(AdminAplicConnectionString))
@@ -201,25 +319,31 @@ namespace LoginManager
                 using (var reader = command.ExecuteReader())
                 {
 
-                    DataTable dt = new DataTable();
+                    dt = new DataTable();
 
                     dt.Load(reader);
-                    var emptyRow = dt.NewRow();
-                    emptyRow["DBRole"] = -1;
-                    emptyRow["Label"] = string.Empty;
-                    dt.Rows.Add(emptyRow);
-                    var dv = new DataView(dt, "", "Label", DataViewRowState.CurrentRows);
-
-                    cmbTipAcces.DataSource = dv;
-                    cmbTipAcces.DisplayMember = "Label";
-                    cmbTipAcces.ValueMember = "DBRole";
-
-
-
-                    cmbTipAcces.Refresh();
+                    
 
                 }
             }
+            access.Add(new Classes.DatabaseRole() {Display="",Value="-1" });
+            foreach (DataRow row in dt.Rows)
+            {
+                access.Add(new Classes.DatabaseRole() { Value = row["DBRole"].ToString(), Display = row["Label"].ToString() });
+            }
+            //var emptyRow = dt.NewRow();
+            //emptyRow["DBRole"] = -1;
+            //emptyRow["Label"] = string.Empty;
+            //dt.Rows.Add(emptyRow);
+            //var dv = new DataView(dt, "", "Label", DataViewRowState.CurrentRows);
+
+            cmbTipAcces.DataSource = access;
+            cmbTipAcces.DisplayMember = "Display";
+            cmbTipAcces.ValueMember = "Value";
+
+
+
+            cmbTipAcces.Refresh();
         }
 
         private void TxtSearch_KeyUp(object sender, KeyEventArgs e)
@@ -317,7 +441,8 @@ namespace LoginManager
                         try
                         {
                             command.ExecuteNonQuery();
-                            ReloadPeople();
+                            txtSearch.Text = txtLogin.Text;
+                            ReloadPeople(txtLogin.Text);
                         }
                         catch (Exception xcp)
                         {
@@ -355,6 +480,7 @@ namespace LoginManager
                 ReloadRoles(gridPeople.Rows[e.RowIndex].Cells["Login"].FormattedValue.ToString());
 
             }
+            generatedPass = string.Empty;
 
         }
 
@@ -400,6 +526,8 @@ namespace LoginManager
 
         private void BtnDeleteRole_Click(object sender, EventArgs e)
         {
+            //if (lblAplicatie.Text == string.Empty || lblTipAcces.Text == string.Empty)
+            //return;
             var qDeleteUserRole = string.Format(DeleteUserRole, txtLogin.Text, lblAplicatie.Text, lblTipAcces.Text);
             if (MessageBox.Show(string.Format("Rolul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUserRole), "Delete Role?", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
@@ -411,7 +539,7 @@ namespace LoginManager
                     try
                     {
                         command.ExecuteNonQuery();
-                        ReloadPeople();
+                        ReloadRoles(txtLogin.Text);
                     }
                     catch (Exception xcp)
                     {
@@ -436,17 +564,29 @@ namespace LoginManager
 
                 lblAplicatie.Text = gridRoles.Rows[e.RowIndex].Cells["Aplicatie"].FormattedValue.ToString();
                 lblTipAcces.Text = gridRoles.Rows[e.RowIndex].Cells["TipAcces"].FormattedValue.ToString();
+                btnDeleteRole.Visible = true;
+                var app = apps.Where(a => a.AppName == lblAplicatie.Text).First();
+                lblServerInfo.Text = "      " + app.ConnectionString;
 
-
+            }
+            else
+            {
+                btnDeleteRole.Visible = true;
+                lblServerInfo.Text = "";
             }
 
         }
 
         private void BtnAddRole_Click(object sender, EventArgs e)
         {
+            if (((List<string>)cmbAplicatie.SelectedValue)[0] == string.Empty || cmbTipAcces.SelectedValue.ToString() == "-1")
+            {
+                MessageBox.Show("Selectati aplicatia si tipul de acces!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             var qInsertUserRole = string.Format(InsertUserRole, txtLogin.Text,
                                     cmbAplicatie.Text,
-                                    cmbTipAcces.Text) ;
+                                    cmbTipAcces.Text);
             if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUserRole), "Adaugare rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
 
@@ -466,6 +606,48 @@ namespace LoginManager
                 }
             }
 
+        }
+
+        private void BtnCreateLogin_Click(object sender, EventArgs e)
+        {
+            generatedPass = generatedPass == string.Empty ? PasswordUtility.PasswordGenerator.PwGenerator.Generate(8, true, true, true).ReadString() : generatedPass;
+            var qCreateLogin = string.Format(CreateLogin, txtLogin.Text,
+                                  generatedPass);
+            CreateOrModifyLogin(qCreateLogin);
+        }
+
+        private void CreateOrModifyLogin(string qCreateLogin)
+        {
+
+            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nNotati parola inainte de a continu!\nDoriti sa continuati?\n\n{0}", qCreateLogin), "Creare login", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+
+                using (var connection = new SqlConnection(lblServerInfo.Text))
+                {
+                    var command = new SqlCommand(qCreateLogin, connection);
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        btnCreateLogin.Visible = false;
+
+                    }
+                    catch (Exception xcp)
+                    {
+                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                ReloadRoles(txtLogin.Text);
+            }
+        }
+
+        private void BtnResetPass_Click(object sender, EventArgs e)
+        {
+            generatedPass = string.Empty;
+            generatedPass = generatedPass == string.Empty ? PasswordUtility.PasswordGenerator.PwGenerator.Generate(8, true, true, true).ReadString() : generatedPass;
+            var qResetLogin = string.Format(ResetLogin, txtLogin.Text,
+                      generatedPass);
+            CreateOrModifyLogin(qResetLogin);
         }
     }
 }

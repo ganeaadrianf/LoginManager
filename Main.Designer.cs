@@ -68,6 +68,12 @@
             this.txtPrenume = new System.Windows.Forms.TextBox();
             this.txtNume = new System.Windows.Forms.TextBox();
             this.txtCNP = new System.Windows.Forms.TextBox();
+            this.lblServerInfo = new System.Windows.Forms.Label();
+            this.lblLoginInfo = new System.Windows.Forms.Label();
+            this.btnCreateLogin = new System.Windows.Forms.Button();
+            this.btnResetPass = new System.Windows.Forms.Button();
+            this.lblUserInRole = new System.Windows.Forms.Label();
+            this.btnAddLoginToRole = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -83,6 +89,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridPeople)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
             this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
             this.splitContainer5.Panel1.SuspendLayout();
@@ -128,8 +135,8 @@
             this.splitContainer1.Panel2.Controls.Add(this.txtPrenume);
             this.splitContainer1.Panel2.Controls.Add(this.txtNume);
             this.splitContainer1.Panel2.Controls.Add(this.txtCNP);
-            this.splitContainer1.Size = new System.Drawing.Size(1312, 450);
-            this.splitContainer1.SplitterDistance = 611;
+            this.splitContainer1.Size = new System.Drawing.Size(1777, 501);
+            this.splitContainer1.SplitterDistance = 1114;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -146,8 +153,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(611, 450);
-            this.splitContainer2.SplitterDistance = 37;
+            this.splitContainer2.Size = new System.Drawing.Size(1114, 501);
+            this.splitContainer2.SplitterDistance = 41;
             this.splitContainer2.TabIndex = 0;
             // 
             // txtSearch
@@ -173,8 +180,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(611, 409);
-            this.splitContainer3.SplitterDistance = 115;
+            this.splitContainer3.Size = new System.Drawing.Size(1114, 456);
+            this.splitContainer3.SplitterDistance = 128;
             this.splitContainer3.TabIndex = 1;
             // 
             // gridPeople
@@ -186,7 +193,7 @@
             this.gridPeople.Location = new System.Drawing.Point(0, 0);
             this.gridPeople.Name = "gridPeople";
             this.gridPeople.ReadOnly = true;
-            this.gridPeople.Size = new System.Drawing.Size(611, 115);
+            this.gridPeople.Size = new System.Drawing.Size(1114, 128);
             this.gridPeople.TabIndex = 0;
             this.gridPeople.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridPeople_CellClick);
             this.gridPeople.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridPeople_RowEnter);
@@ -200,8 +207,20 @@
             // splitContainer4.Panel1
             // 
             this.splitContainer4.Panel1.Controls.Add(this.splitContainer5);
-            this.splitContainer4.Size = new System.Drawing.Size(611, 290);
-            this.splitContainer4.SplitterDistance = 341;
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.btnAddLoginToRole);
+            this.splitContainer4.Panel2.Controls.Add(this.lblUserInRole);
+            this.splitContainer4.Panel2.Controls.Add(this.btnResetPass);
+            this.splitContainer4.Panel2.Controls.Add(this.btnCreateLogin);
+            this.splitContainer4.Panel2.Controls.Add(this.lblLoginInfo);
+            this.splitContainer4.Panel2.Controls.Add(this.lblServerInfo);
+            this.splitContainer4.Panel2.Controls.Add(this.lblTipAcces);
+            this.splitContainer4.Panel2.Controls.Add(this.btnDeleteRole);
+            this.splitContainer4.Panel2.Controls.Add(this.lblAplicatie);
+            this.splitContainer4.Size = new System.Drawing.Size(1114, 324);
+            this.splitContainer4.SplitterDistance = 533;
             this.splitContainer4.TabIndex = 0;
             // 
             // splitContainer5
@@ -217,14 +236,11 @@
             // 
             // splitContainer5.Panel2
             // 
-            this.splitContainer5.Panel2.Controls.Add(this.lblTipAcces);
-            this.splitContainer5.Panel2.Controls.Add(this.lblAplicatie);
             this.splitContainer5.Panel2.Controls.Add(this.btnAddRole);
             this.splitContainer5.Panel2.Controls.Add(this.cmbTipAcces);
             this.splitContainer5.Panel2.Controls.Add(this.cmbAplicatie);
-            this.splitContainer5.Panel2.Controls.Add(this.btnDeleteRole);
-            this.splitContainer5.Size = new System.Drawing.Size(341, 290);
-            this.splitContainer5.SplitterDistance = 145;
+            this.splitContainer5.Size = new System.Drawing.Size(533, 324);
+            this.splitContainer5.SplitterDistance = 162;
             this.splitContainer5.TabIndex = 0;
             // 
             // gridRoles
@@ -236,7 +252,7 @@
             this.gridRoles.Location = new System.Drawing.Point(0, 0);
             this.gridRoles.Name = "gridRoles";
             this.gridRoles.ReadOnly = true;
-            this.gridRoles.Size = new System.Drawing.Size(341, 145);
+            this.gridRoles.Size = new System.Drawing.Size(533, 162);
             this.gridRoles.TabIndex = 0;
             this.gridRoles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_CellClick);
             this.gridRoles.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_RowEnter);
@@ -244,7 +260,7 @@
             // lblTipAcces
             // 
             this.lblTipAcces.AutoSize = true;
-            this.lblTipAcces.Location = new System.Drawing.Point(160, 19);
+            this.lblTipAcces.Location = new System.Drawing.Point(76, 20);
             this.lblTipAcces.Name = "lblTipAcces";
             this.lblTipAcces.Size = new System.Drawing.Size(62, 13);
             this.lblTipAcces.TabIndex = 5;
@@ -253,7 +269,7 @@
             // lblAplicatie
             // 
             this.lblAplicatie.AutoSize = true;
-            this.lblAplicatie.Location = new System.Drawing.Point(12, 19);
+            this.lblAplicatie.Location = new System.Drawing.Point(13, 20);
             this.lblAplicatie.Name = "lblAplicatie";
             this.lblAplicatie.Size = new System.Drawing.Size(57, 13);
             this.lblAplicatie.TabIndex = 4;
@@ -261,9 +277,11 @@
             // 
             // btnAddRole
             // 
-            this.btnAddRole.Location = new System.Drawing.Point(267, 55);
+            this.btnAddRole.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRole.Image")));
+            this.btnAddRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAddRole.Location = new System.Drawing.Point(254, 1);
             this.btnAddRole.Name = "btnAddRole";
-            this.btnAddRole.Size = new System.Drawing.Size(70, 23);
+            this.btnAddRole.Size = new System.Drawing.Size(96, 32);
             this.btnAddRole.TabIndex = 3;
             this.btnAddRole.Text = "Adauga";
             this.btnAddRole.UseVisualStyleBackColor = true;
@@ -272,7 +290,7 @@
             // cmbTipAcces
             // 
             this.cmbTipAcces.FormattingEnabled = true;
-            this.cmbTipAcces.Location = new System.Drawing.Point(140, 55);
+            this.cmbTipAcces.Location = new System.Drawing.Point(127, 8);
             this.cmbTipAcces.Name = "cmbTipAcces";
             this.cmbTipAcces.Size = new System.Drawing.Size(121, 21);
             this.cmbTipAcces.TabIndex = 2;
@@ -280,18 +298,20 @@
             // cmbAplicatie
             // 
             this.cmbAplicatie.FormattingEnabled = true;
-            this.cmbAplicatie.Location = new System.Drawing.Point(13, 55);
+            this.cmbAplicatie.Location = new System.Drawing.Point(0, 8);
             this.cmbAplicatie.Name = "cmbAplicatie";
             this.cmbAplicatie.Size = new System.Drawing.Size(121, 21);
             this.cmbAplicatie.TabIndex = 1;
             // 
             // btnDeleteRole
             // 
-            this.btnDeleteRole.Location = new System.Drawing.Point(228, 14);
+            this.btnDeleteRole.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteRole.Image")));
+            this.btnDeleteRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDeleteRole.Location = new System.Drawing.Point(144, 6);
             this.btnDeleteRole.Name = "btnDeleteRole";
-            this.btnDeleteRole.Size = new System.Drawing.Size(109, 23);
+            this.btnDeleteRole.Size = new System.Drawing.Size(195, 35);
             this.btnDeleteRole.TabIndex = 0;
-            this.btnDeleteRole.Text = "Sterge";
+            this.btnDeleteRole.Text = "Sterge inregistrarea selectata";
             this.btnDeleteRole.UseVisualStyleBackColor = true;
             this.btnDeleteRole.Click += new System.EventHandler(this.BtnDeleteRole_Click);
             // 
@@ -301,7 +321,7 @@
             this.btnDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnDelete.Location = new System.Drawing.Point(364, 245);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(124, 33);
+            this.btnDelete.Size = new System.Drawing.Size(137, 33);
             this.btnDelete.TabIndex = 25;
             this.btnDelete.Text = "Sterge user";
             this.btnDelete.UseVisualStyleBackColor = true;
@@ -311,7 +331,7 @@
             // 
             this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
             this.btnClear.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClear.Location = new System.Drawing.Point(157, 245);
+            this.btnClear.Location = new System.Drawing.Point(180, 245);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(101, 33);
             this.btnClear.TabIndex = 24;
@@ -325,7 +345,7 @@
             this.btnUpdate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnUpdate.Location = new System.Drawing.Point(15, 245);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(136, 32);
+            this.btnUpdate.Size = new System.Drawing.Size(144, 33);
             this.btnUpdate.TabIndex = 22;
             this.btnUpdate.Text = "Salvare modificari";
             this.btnUpdate.UseVisualStyleBackColor = true;
@@ -525,11 +545,88 @@
             this.txtCNP.Size = new System.Drawing.Size(154, 20);
             this.txtCNP.TabIndex = 0;
             // 
+            // lblServerInfo
+            // 
+            this.lblServerInfo.AutoSize = true;
+            this.lblServerInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblServerInfo.Image = ((System.Drawing.Image)(resources.GetObject("lblServerInfo.Image")));
+            this.lblServerInfo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblServerInfo.Location = new System.Drawing.Point(14, 62);
+            this.lblServerInfo.MaximumSize = new System.Drawing.Size(500, 0);
+            this.lblServerInfo.Name = "lblServerInfo";
+            this.lblServerInfo.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
+            this.lblServerInfo.Size = new System.Drawing.Size(77, 40);
+            this.lblServerInfo.TabIndex = 7;
+            this.lblServerInfo.Tag = "";
+            this.lblServerInfo.Text = "     con str";
+            this.lblServerInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblLoginInfo
+            // 
+            this.lblLoginInfo.AutoSize = true;
+            this.lblLoginInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLoginInfo.Image = ((System.Drawing.Image)(resources.GetObject("lblLoginInfo.Image")));
+            this.lblLoginInfo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblLoginInfo.Location = new System.Drawing.Point(14, 138);
+            this.lblLoginInfo.MaximumSize = new System.Drawing.Size(500, 0);
+            this.lblLoginInfo.Name = "lblLoginInfo";
+            this.lblLoginInfo.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
+            this.lblLoginInfo.Size = new System.Drawing.Size(106, 40);
+            this.lblLoginInfo.TabIndex = 8;
+            this.lblLoginInfo.Tag = "";
+            this.lblLoginInfo.Text = "     login exists";
+            this.lblLoginInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnCreateLogin
+            // 
+            this.btnCreateLogin.Location = new System.Drawing.Point(408, 148);
+            this.btnCreateLogin.Name = "btnCreateLogin";
+            this.btnCreateLogin.Size = new System.Drawing.Size(75, 23);
+            this.btnCreateLogin.TabIndex = 9;
+            this.btnCreateLogin.Text = "Creeaza";
+            this.btnCreateLogin.UseVisualStyleBackColor = true;
+            this.btnCreateLogin.Click += new System.EventHandler(this.BtnCreateLogin_Click);
+            // 
+            // btnResetPass
+            // 
+            this.btnResetPass.Location = new System.Drawing.Point(489, 148);
+            this.btnResetPass.Name = "btnResetPass";
+            this.btnResetPass.Size = new System.Drawing.Size(75, 23);
+            this.btnResetPass.TabIndex = 10;
+            this.btnResetPass.Text = "Reset";
+            this.btnResetPass.UseVisualStyleBackColor = true;
+            this.btnResetPass.Click += new System.EventHandler(this.BtnResetPass_Click);
+            // 
+            // lblUserInRole
+            // 
+            this.lblUserInRole.AutoSize = true;
+            this.lblUserInRole.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUserInRole.Image = ((System.Drawing.Image)(resources.GetObject("lblUserInRole.Image")));
+            this.lblUserInRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblUserInRole.Location = new System.Drawing.Point(14, 206);
+            this.lblUserInRole.MaximumSize = new System.Drawing.Size(500, 0);
+            this.lblUserInRole.Name = "lblUserInRole";
+            this.lblUserInRole.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
+            this.lblUserInRole.Size = new System.Drawing.Size(106, 40);
+            this.lblUserInRole.TabIndex = 11;
+            this.lblUserInRole.Tag = "";
+            this.lblUserInRole.Text = "     user in role";
+            this.lblUserInRole.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnAddLoginToRole
+            // 
+            this.btnAddLoginToRole.Location = new System.Drawing.Point(408, 216);
+            this.btnAddLoginToRole.Name = "btnAddLoginToRole";
+            this.btnAddLoginToRole.Size = new System.Drawing.Size(75, 23);
+            this.btnAddLoginToRole.TabIndex = 12;
+            this.btnAddLoginToRole.Text = "Adauga rol";
+            this.btnAddLoginToRole.UseVisualStyleBackColor = true;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1312, 450);
+            this.ClientSize = new System.Drawing.Size(1777, 501);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
@@ -552,11 +649,12 @@
             this.splitContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridPeople)).EndInit();
             this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            this.splitContainer4.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
             this.splitContainer4.ResumeLayout(false);
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel2.ResumeLayout(false);
-            this.splitContainer5.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
             this.splitContainer5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridRoles)).EndInit();
@@ -605,6 +703,12 @@
         private System.Windows.Forms.Button btnDeleteRole;
         private System.Windows.Forms.Label lblTipAcces;
         private System.Windows.Forms.Label lblAplicatie;
+        private System.Windows.Forms.Label lblServerInfo;
+        private System.Windows.Forms.Label lblLoginInfo;
+        private System.Windows.Forms.Button btnCreateLogin;
+        private System.Windows.Forms.Button btnResetPass;
+        private System.Windows.Forms.Button btnAddLoginToRole;
+        private System.Windows.Forms.Label lblUserInRole;
     }
 }
 
