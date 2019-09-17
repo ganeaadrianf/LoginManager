@@ -1003,6 +1003,8 @@ namespace LoginManager
 
         private void BtnTestCredential_Click(object sender, EventArgs e)
         {
+            WriteLog("Functionalitate dezactivata!!",3);
+            return;
             //lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName))
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(lblServerInfo.Text);
             builder.IntegratedSecurity = false;
