@@ -86,6 +86,7 @@
             this.btnDropRole = new System.Windows.Forms.Button();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
             this.logList = new System.Windows.Forms.ListView();
+            this.Log = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -222,7 +223,7 @@
             this.splitContainer4.Panel2.Controls.Add(this.btnDeleteRole);
             this.splitContainer4.Panel2.Controls.Add(this.lblAplicatie);
             this.splitContainer4.Size = new System.Drawing.Size(1114, 324);
-            this.splitContainer4.SplitterDistance = 415;
+            this.splitContainer4.SplitterDistance = 363;
             this.splitContainer4.TabIndex = 0;
             // 
             // splitContainer5
@@ -241,7 +242,7 @@
             this.splitContainer5.Panel2.Controls.Add(this.btnAddRole);
             this.splitContainer5.Panel2.Controls.Add(this.cmbTipAcces);
             this.splitContainer5.Panel2.Controls.Add(this.cmbAplicatie);
-            this.splitContainer5.Size = new System.Drawing.Size(415, 324);
+            this.splitContainer5.Size = new System.Drawing.Size(363, 324);
             this.splitContainer5.SplitterDistance = 162;
             this.splitContainer5.TabIndex = 0;
             // 
@@ -254,7 +255,7 @@
             this.gridRoles.Location = new System.Drawing.Point(0, 0);
             this.gridRoles.Name = "gridRoles";
             this.gridRoles.ReadOnly = true;
-            this.gridRoles.Size = new System.Drawing.Size(415, 162);
+            this.gridRoles.Size = new System.Drawing.Size(363, 162);
             this.gridRoles.TabIndex = 1;
             this.gridRoles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_CellClick);
             this.gridRoles.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_RowEnter);
@@ -289,9 +290,11 @@
             // 
             // btnGeneratePassword
             // 
-            this.btnGeneratePassword.Location = new System.Drawing.Point(473, 193);
+            this.btnGeneratePassword.Image = ((System.Drawing.Image)(resources.GetObject("btnGeneratePassword.Image")));
+            this.btnGeneratePassword.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnGeneratePassword.Location = new System.Drawing.Point(473, 189);
             this.btnGeneratePassword.Name = "btnGeneratePassword";
-            this.btnGeneratePassword.Size = new System.Drawing.Size(75, 23);
+            this.btnGeneratePassword.Size = new System.Drawing.Size(134, 33);
             this.btnGeneratePassword.TabIndex = 11;
             this.btnGeneratePassword.Text = "Genereaza";
             this.btnGeneratePassword.UseVisualStyleBackColor = true;
@@ -308,7 +311,7 @@
             // lblMinChars
             // 
             this.lblMinChars.AutoSize = true;
-            this.lblMinChars.Location = new System.Drawing.Point(15, 199);
+            this.lblMinChars.Location = new System.Drawing.Point(15, 200);
             this.lblMinChars.Name = "lblMinChars";
             this.lblMinChars.Size = new System.Drawing.Size(82, 13);
             this.lblMinChars.TabIndex = 17;
@@ -362,12 +365,15 @@
             // 
             // btnAddLoginToRole
             // 
-            this.btnAddLoginToRole.Location = new System.Drawing.Point(408, 259);
+            this.btnAddLoginToRole.Image = ((System.Drawing.Image)(resources.GetObject("btnAddLoginToRole.Image")));
+            this.btnAddLoginToRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAddLoginToRole.Location = new System.Drawing.Point(473, 244);
             this.btnAddLoginToRole.Name = "btnAddLoginToRole";
-            this.btnAddLoginToRole.Size = new System.Drawing.Size(75, 23);
+            this.btnAddLoginToRole.Size = new System.Drawing.Size(117, 33);
             this.btnAddLoginToRole.TabIndex = 13;
             this.btnAddLoginToRole.Text = "Adauga rol";
             this.btnAddLoginToRole.UseVisualStyleBackColor = true;
+            this.btnAddLoginToRole.Visible = false;
             this.btnAddLoginToRole.Click += new System.EventHandler(this.BtnAddLoginToRole_Click);
             // 
             // lblUserInRole
@@ -376,21 +382,23 @@
             this.lblUserInRole.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUserInRole.Image = ((System.Drawing.Image)(resources.GetObject("lblUserInRole.Image")));
             this.lblUserInRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblUserInRole.Location = new System.Drawing.Point(14, 249);
+            this.lblUserInRole.Location = new System.Drawing.Point(14, 245);
             this.lblUserInRole.MaximumSize = new System.Drawing.Size(500, 0);
             this.lblUserInRole.Name = "lblUserInRole";
             this.lblUserInRole.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
-            this.lblUserInRole.Size = new System.Drawing.Size(106, 40);
+            this.lblUserInRole.Size = new System.Drawing.Size(114, 40);
             this.lblUserInRole.TabIndex = 11;
             this.lblUserInRole.Tag = "";
-            this.lblUserInRole.Text = "     user in role";
+            this.lblUserInRole.Text = "       user in role";
             this.lblUserInRole.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnResetPass
             // 
-            this.btnResetPass.Location = new System.Drawing.Point(473, 148);
+            this.btnResetPass.Image = ((System.Drawing.Image)(resources.GetObject("btnResetPass.Image")));
+            this.btnResetPass.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnResetPass.Location = new System.Drawing.Point(473, 132);
             this.btnResetPass.Name = "btnResetPass";
-            this.btnResetPass.Size = new System.Drawing.Size(75, 23);
+            this.btnResetPass.Size = new System.Drawing.Size(107, 33);
             this.btnResetPass.TabIndex = 15;
             this.btnResetPass.Text = "Reset";
             this.btnResetPass.UseVisualStyleBackColor = true;
@@ -398,12 +406,15 @@
             // 
             // btnCreateLogin
             // 
-            this.btnCreateLogin.Location = new System.Drawing.Point(473, 148);
+            this.btnCreateLogin.Image = ((System.Drawing.Image)(resources.GetObject("btnCreateLogin.Image")));
+            this.btnCreateLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCreateLogin.Location = new System.Drawing.Point(473, 132);
             this.btnCreateLogin.Name = "btnCreateLogin";
-            this.btnCreateLogin.Size = new System.Drawing.Size(75, 23);
+            this.btnCreateLogin.Size = new System.Drawing.Size(118, 33);
             this.btnCreateLogin.TabIndex = 9;
             this.btnCreateLogin.Text = "Creeaza";
             this.btnCreateLogin.UseVisualStyleBackColor = true;
+            this.btnCreateLogin.Visible = false;
             this.btnCreateLogin.Click += new System.EventHandler(this.BtnCreateLogin_Click);
             // 
             // lblLoginInfo
@@ -412,7 +423,7 @@
             this.lblLoginInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLoginInfo.Image = ((System.Drawing.Image)(resources.GetObject("lblLoginInfo.Image")));
             this.lblLoginInfo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblLoginInfo.Location = new System.Drawing.Point(14, 138);
+            this.lblLoginInfo.Location = new System.Drawing.Point(14, 131);
             this.lblLoginInfo.MaximumSize = new System.Drawing.Size(500, 0);
             this.lblLoginInfo.Name = "lblLoginInfo";
             this.lblLoginInfo.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
@@ -436,7 +447,7 @@
             this.lblServerInfo.TabIndex = 7;
             this.lblServerInfo.Tag = "";
             this.lblServerInfo.Text = "     con str";
-            this.lblServerInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblServerInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblTipAcces
             // 
@@ -451,7 +462,7 @@
             // 
             this.btnDeleteRole.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteRole.Image")));
             this.btnDeleteRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDeleteRole.Location = new System.Drawing.Point(144, 6);
+            this.btnDeleteRole.Location = new System.Drawing.Point(144, 9);
             this.btnDeleteRole.Name = "btnDeleteRole";
             this.btnDeleteRole.Size = new System.Drawing.Size(195, 35);
             this.btnDeleteRole.TabIndex = 5;
@@ -700,9 +711,11 @@
             // 
             // btnDeleteLogin
             // 
-            this.btnDeleteLogin.Location = new System.Drawing.Point(564, 148);
+            this.btnDeleteLogin.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteLogin.Image")));
+            this.btnDeleteLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDeleteLogin.Location = new System.Drawing.Point(597, 132);
             this.btnDeleteLogin.Name = "btnDeleteLogin";
-            this.btnDeleteLogin.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteLogin.Size = new System.Drawing.Size(118, 33);
             this.btnDeleteLogin.TabIndex = 16;
             this.btnDeleteLogin.Text = "Sterge login";
             this.btnDeleteLogin.UseVisualStyleBackColor = true;
@@ -710,18 +723,23 @@
             // 
             // btnTestCredential
             // 
-            this.btnTestCredential.Location = new System.Drawing.Point(564, 192);
+            this.btnTestCredential.Image = ((System.Drawing.Image)(resources.GetObject("btnTestCredential.Image")));
+            this.btnTestCredential.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnTestCredential.Location = new System.Drawing.Point(473, 69);
             this.btnTestCredential.Name = "btnTestCredential";
-            this.btnTestCredential.Size = new System.Drawing.Size(107, 23);
+            this.btnTestCredential.Size = new System.Drawing.Size(141, 33);
             this.btnTestCredential.TabIndex = 12;
             this.btnTestCredential.Text = "Test credentiale";
             this.btnTestCredential.UseVisualStyleBackColor = true;
+            this.btnTestCredential.Click += new System.EventHandler(this.BtnTestCredential_Click);
             // 
             // btnDropRole
             // 
-            this.btnDropRole.Location = new System.Drawing.Point(490, 258);
+            this.btnDropRole.Image = ((System.Drawing.Image)(resources.GetObject("btnDropRole.Image")));
+            this.btnDropRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDropRole.Location = new System.Drawing.Point(610, 244);
             this.btnDropRole.Name = "btnDropRole";
-            this.btnDropRole.Size = new System.Drawing.Size(75, 23);
+            this.btnDropRole.Size = new System.Drawing.Size(105, 32);
             this.btnDropRole.TabIndex = 14;
             this.btnDropRole.Text = "Drop role";
             this.btnDropRole.UseVisualStyleBackColor = true;
@@ -774,14 +792,25 @@
             // logList
             // 
             this.logList.Alignment = System.Windows.Forms.ListViewAlignment.Left;
+            this.logList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Log});
             this.logList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logList.FullRowSelect = true;
             this.logList.GridLines = true;
+            this.logList.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.logList.LabelEdit = true;
+            this.logList.LabelWrap = false;
             this.logList.Location = new System.Drawing.Point(0, 0);
             this.logList.Name = "logList";
             this.logList.Size = new System.Drawing.Size(659, 192);
             this.logList.TabIndex = 0;
             this.logList.UseCompatibleStateImageBehavior = false;
-            this.logList.View = System.Windows.Forms.View.List;
+            this.logList.View = System.Windows.Forms.View.Details;
+            // 
+            // Log
+            // 
+            this.Log.Text = "Log";
+            this.Log.Width = 655;
             // 
             // frmMain
             // 
@@ -886,6 +915,7 @@
         private System.Windows.Forms.Button btnDropRole;
         private System.Windows.Forms.SplitContainer splitContainer6;
         private System.Windows.Forms.ListView logList;
+        private System.Windows.Forms.ColumnHeader Log;
     }
 }
 

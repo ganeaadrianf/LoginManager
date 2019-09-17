@@ -110,7 +110,8 @@ namespace LoginManager
                 WriteLog("Loading people grid...");
                 ReloadPeople();
             }
-            catch (Exception xcp) {
+            catch (Exception xcp)
+            {
                 WriteLog(xcp.Message, 3);
             }
         }
@@ -125,20 +126,20 @@ namespace LoginManager
 
         private void ReloadPeople(string searchParam = null)
         {
-            
+
             var queryUsers = string.Format(this.queryUsers, searchParam == null ? string.Empty : searchParam);
 
             using (var connection = new SqlConnection(adminAplicConnectionString))
             {
                 var command = new SqlCommand(queryUsers, connection);
-                WriteLog(string.Format("Opening connection to {0}...",adminAplicConnectionString));
+
                 connection.Open();
                 using (var reader = command.ExecuteReader())
                 {
 
                     DataTable dt = new DataTable();
                     dt.Load(reader);
-                    
+
                     gridPeople.AutoGenerateColumns = true;
                     gridPeople.DataSource = dt;
                     gridPeople.Refresh();
@@ -156,7 +157,7 @@ namespace LoginManager
             using (var connection = new SqlConnection(adminAplicConnectionString))
             {
                 var command = new SqlCommand(qRoles, connection);
-                WriteLog(string.Format("Opening connection to {0}...", adminAplicConnectionString));
+
                 connection.Open();
                 using (var reader = command.ExecuteReader())
                 {
@@ -466,7 +467,7 @@ namespace LoginManager
                 if (userExists)
                 {
                     WriteLog("User exists!");
-                    WriteLog(queryUpdateUser);
+                    WriteLog(queryUpdateUser, 1);
                     if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", queryUpdateUser), "USER EXISTENT", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                     {
                         using (var connection = new SqlConnection(adminAplicConnectionString))
@@ -510,13 +511,14 @@ namespace LoginManager
                             {
                                 WriteLog(xcp.Message, 3);
                                 MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                
+
                             }
                         }
                     }
                 }
             }
-            catch (Exception xcp) {
+            catch (Exception xcp)
+            {
                 WriteLog(xcp.Message, 3);
             }
 
@@ -573,11 +575,11 @@ namespace LoginManager
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            
+
             var qDeleteUser = string.Format(deleteUser, txtLogin.Text);
             if (MessageBox.Show(string.Format("Userul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUser), "Delete user?", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                WriteLog("Deleting user...");
+                WriteLog("Deleting user: " + qDeleteUser, 1);
                 using (var connection = new SqlConnection(adminAplicConnectionString))
                 {
                     var command = new SqlCommand(qDeleteUser, connection);
@@ -586,7 +588,7 @@ namespace LoginManager
                     {
                         command.ExecuteNonQuery();
                         ReloadPeople();
-                        WriteLog("OK!",2);
+                        WriteLog("OK!", 2);
                     }
                     catch (Exception xcp)
                     {
@@ -601,10 +603,12 @@ namespace LoginManager
         {
             //if (lblAplicatie.Text == string.Empty || lblTipAcces.Text == string.Empty)
             //return;
-            var qDeleteUserRole = string.Format(deleteUserRole, txtLogin.Text, lblAplicatie.Text, lblTipAcces.Text);
-            if (MessageBox.Show(string.Format("Rolul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUserRole), "Delete Role?", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-            {
 
+            var qDeleteUserRole = string.Format(deleteUserRole, txtLogin.Text, lblAplicatie.Text, lblTipAcces.Text);
+            if (MessageBox.Show(string.Format("Rolul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUserRole), "Delete Role?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+                WriteLog("Stergere rol din admin aplic!");
+                WriteLog(qDeleteUserRole, 1);
                 using (var connection = new SqlConnection(adminAplicConnectionString))
                 {
                     var command = new SqlCommand(qDeleteUserRole, connection);
@@ -613,9 +617,11 @@ namespace LoginManager
                     {
                         command.ExecuteNonQuery();
                         ReloadRoles(txtLogin.Text);
+                        WriteLog("OK!", 2);
                     }
                     catch (Exception xcp)
                     {
+                        WriteLog(qDeleteUserRole, 1);
                         MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -656,31 +662,43 @@ namespace LoginManager
 
         private void BtnAddRole_Click(object sender, EventArgs e)
         {
-            if (((List<string>)cmbAplicatie.SelectedValue)[0] == string.Empty || cmbTipAcces.SelectedValue.ToString() == "-1")
-            {
-                MessageBox.Show("Selectati aplicatia si tipul de acces!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            var qInsertUserRole = string.Format(insertUserRole, txtLogin.Text,
-                                    cmbAplicatie.Text,
-                                    cmbTipAcces.Text);
-            if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUserRole), "Adaugare rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-            {
 
-                using (var connection = new SqlConnection(adminAplicConnectionString))
+            try
+            {
+                if (((List<string>)cmbAplicatie.SelectedValue)[0] == string.Empty || cmbTipAcces.SelectedValue.ToString() == "-1")
                 {
-                    var command = new SqlCommand(qInsertUserRole, connection);
-                    connection.Open();
-                    try
+                    MessageBox.Show("Selectati aplicatia si tipul de acces!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                WriteLog("Salvare permisiune in admin aplic...");
+                var qInsertUserRole = string.Format(insertUserRole, txtLogin.Text,
+                                        cmbAplicatie.Text,
+                                        cmbTipAcces.Text);
+                WriteLog(qInsertUserRole, 1);
+                if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUserRole), "Adaugare rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                {
+
+                    using (var connection = new SqlConnection(adminAplicConnectionString))
                     {
-                        command.ExecuteNonQuery();
-                        ReloadRoles(txtLogin.Text);
-                    }
-                    catch (Exception xcp)
-                    {
-                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        var command = new SqlCommand(qInsertUserRole, connection);
+                        connection.Open();
+                        try
+                        {
+                            command.ExecuteNonQuery();
+                            ReloadRoles(txtLogin.Text);
+                            WriteLog("OK!", 2);
+                        }
+                        catch (Exception xcp)
+                        {
+                            WriteLog(xcp.Message, 3);
+                            MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
+            }
+            catch (Exception xcp)
+            {
+                WriteLog(xcp.Message, 3);
             }
 
         }
@@ -697,7 +715,8 @@ namespace LoginManager
 
             if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nNotati parola inainte de a continu!\nDoriti sa continuati?\n\n{0}", qCreateLogin), "Creare login", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-
+                WriteLog("Modificare login");
+                WriteLog(qCreateLogin, 1);
                 using (var connection = new SqlConnection(lblServerInfo.Text))
                 {
                     var command = new SqlCommand(qCreateLogin, connection);
@@ -706,11 +725,13 @@ namespace LoginManager
                     {
                         command.ExecuteNonQuery();
                         btnCreateLogin.Visible = false;
+                        WriteLog("OK!", 2);
 
                     }
                     catch (Exception xcp)
                     {
-                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        WriteLog(xcp.Message, 3);
+                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 ReloadRoles(txtLogin.Text);
@@ -729,9 +750,13 @@ namespace LoginManager
         {
             try
             {
-                txtPassword.Text = PasswordUtility.PasswordGenerator.PwGenerator.Generate(Int32.Parse(txtMinLength.Text), chkUpper.Checked, chkUseDigits.Checked, chkSpecialChars.Checked).ReadString().Replace("'","-");
+
+                txtPassword.Text = PasswordUtility.PasswordGenerator.PwGenerator.Generate(Int32.Parse(txtMinLength.Text), chkUpper.Checked, chkUseDigits.Checked, chkSpecialChars.Checked).ReadString().Replace("'", "-");
+                WriteLog(txtPassword.Text, 4);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
         }
 
         private void BtnDeleteLogin_Click(object sender, EventArgs e)
@@ -739,7 +764,8 @@ namespace LoginManager
             var qDropLogin = string.Format(dropLogin, txtLogin.Text);
             if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nLoginul va fi sters ireversibil!\nDoriti sa continuati?\n\n{0}", qDropLogin), "Steregere login", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-
+                WriteLog("Stergere login sql...");
+                WriteLog(qDropLogin, 1);
                 using (var connection = new SqlConnection(lblServerInfo.Text))
                 {
                     var command = new SqlCommand(qDropLogin, connection);
@@ -750,11 +776,13 @@ namespace LoginManager
                         btnCreateLogin.Visible = true;
                         btnDeleteLogin.Visible = false;
                         btnResetPass.Visible = false;
+                        WriteLog("OK!");
 
 
                     }
                     catch (Exception xcp)
                     {
+                        WriteLog(xcp.Message, 3);
                         MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -767,6 +795,8 @@ namespace LoginManager
             var qCreateDbUser = string.Format(createDBUserForLogin, txtLogin.Text);
             if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul se va crea in baza de date!\nDoriti sa continuati?\n\n{0}", qCreateDbUser), "Creare user", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
+                WriteLog("Creare user db...");
+                WriteLog(qCreateDbUser, 1);
 
                 using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
                 {
@@ -775,10 +805,12 @@ namespace LoginManager
                     try
                     {
                         command.ExecuteNonQuery();
+                        WriteLog("OK!", 2);
 
                     }
                     catch (Exception xcp)
                     {
+                        WriteLog(xcp.Message, 3);
                         MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     finally
@@ -795,6 +827,8 @@ namespace LoginManager
             var qAddRoleMember = string.Format(addRoleMember, access.Where(a => a.Display == lblTipAcces.Text).First().Value, txtLogin.Text);
             if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi adaugat in rol!\nDoriti sa continuati?\n\n{0}", qAddRoleMember), "Adaugare user in rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
+                WriteLog("Creare role db...");
+                WriteLog(qAddRoleMember, 1);
 
                 using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
                 {
@@ -806,10 +840,12 @@ namespace LoginManager
                         btnAddLoginToRole.Visible = false;
                         btnDropRole.Visible = true;
                         lblUserInRole.Text = "       Needs refresh!";
+                        WriteLog("OK!", 2);
 
                     }
                     catch (Exception xcp)
                     {
+                        WriteLog(xcp.Message, 3);
                         MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
@@ -823,7 +859,8 @@ namespace LoginManager
             var qDropRoleMember = string.Format(dropRoleMember, access.Where(a => a.Display == lblTipAcces.Text).First().Value, txtLogin.Text);
             if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi sters din rol!\nDoriti sa continuati?\n\n{0}", qDropRoleMember), "Stergere user din rol", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-
+                WriteLog("Stergere rol db...");
+                WriteLog(qDropRoleMember, 1);
                 using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
                 {
                     var command = new SqlCommand(qDropRoleMember, connection);
@@ -834,10 +871,12 @@ namespace LoginManager
                         btnDropRole.Visible = false;
                         btnAddLoginToRole.Visible = true;
                         lblUserInRole.Text = "       Needs refresh!";
-                       
+                        WriteLog("OK!", 2);
+
                     }
                     catch (Exception xcp)
                     {
+                        WriteLog(xcp.Message, 3);
                         MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
@@ -846,25 +885,59 @@ namespace LoginManager
             }
         }
 
-        private void WriteLog(string message, int? type=null) {
+        private void WriteLog(string message, int? type = null)
+        {
             ListViewItem li = new ListViewItem();
-            switch (type) {
+
+            switch (type)
+            {
+                case 4:
+                    li.ForeColor = Color.Orange;
+                    break;
                 case 3:
                     li.ForeColor = Color.Red;
                     break;
                 case 2:
                     li.ForeColor = Color.Green;
                     break;
+                case 1:
+                    li.ForeColor = Color.Blue;
+                    break;
                 default:
                     li.ForeColor = Color.Black;
                     break;
 
             }
-               
-           
+
+
             li.Text = message;
-            
-            logList.Items.Insert(0,li);
+
+            logList.Items.Insert(0, li);
+        }
+
+        private void BtnTestCredential_Click(object sender, EventArgs e)
+        {
+            //lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName))
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(lblServerInfo.Text);
+            builder.IntegratedSecurity = false;
+            var connStr = string.Format("Data Source={0};Initial Catalog={1};Integrated Security=false;User Id={2};Password={3};", builder.DataSource, builder.InitialCatalog, txtLogin.Text, txtPassword.Text);
+           
+            WriteLog("Connecting to: " + connStr);
+            try
+            {
+               
+                using (var connection = new SqlConnection(connStr))
+                {
+
+                    connection.Open();
+                    WriteLog("Connection successful!", 1);
+
+                }
+            }
+            catch (Exception xcp)
+            {
+                WriteLog("Connection failed!\n" + xcp.Message, 3);
+            }
         }
     }
 }
