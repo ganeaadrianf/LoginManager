@@ -17,31 +17,36 @@ namespace LoginManager
 {
     public partial class frmMain : Form
     {
-        public string QueryUsers { get; set; }
+        private string queryUsers = string.Empty;
 
-        public string QueryUserRoles { get; set; }
-        public string AdminAplicConnectionString { get; set; }
-        public string AplicatieList { get; set; }
+        private string queryUserRoles = string.Empty;
+        private string adminAplicConnectionString = string.Empty;
+        private string aplicatieList = string.Empty;
 
-        public string TipAccessList { get; set; }
+        private string tipAccessList = string.Empty;
 
         private const int maxNumberOfServers = 10;
         private const int depHierarchyCount = 7;
 
-        public List<string> depHierarchyQueries { get; set; }
+        private List<string> depHierarchyQueries = new List<string>();
 
-        public string UpdateUser { get; set; }
-        public string InsertUser { get; set; }
-        public string InsertUserRole { get; set; }
-        public string DeleteUser { get; set; }
-        public string DeleteUserRole { get; set; }
-        public string CheckIfUserExists { get; set; }
-        public string CheckIfLoginExists { get; set; }
-        public string CheckIfUserMappedToRole { get; set; }
-        public string CreateLogin { get; set; }
-        public string ResetLogin { get; set; }
+        private string updateUser = string.Empty;
+        private string insertUser = string.Empty;
+        private string insertUserRole = string.Empty;
+        private string deleteUser = string.Empty;
+        private string deleteUserRole = string.Empty;
+        private string checkIfUserExists = string.Empty;
+        private string checkIfLoginExists = string.Empty;
+        private string checkIfUserMappedToRole = string.Empty;
+        private string createLogin = string.Empty;
+        private string resetLogin = string.Empty;
+        private string dropLogin = string.Empty;
 
-        string generatedPass = string.Empty;
+        private string createDBUserForLogin = string.Empty;
+        private string addRoleMember = string.Empty;
+        private string dropRoleMember = string.Empty;
+
+
 
         private Dictionary<string, string> sqlServerConnectionStrings = new Dictionary<string, string>();
 
@@ -57,42 +62,57 @@ namespace LoginManager
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            lblTipAcces.Text = string.Empty;
-            lblAplicatie.Text = string.Empty;
-            btnDeleteRole.Visible = false;
-
-            LoadConnectionStrings();
-            AdminAplicConnectionString = ConfigurationManager.ConnectionStrings["AdminAplicConnectionString"].ConnectionString;
-            QueryUsers = ConfigurationManager.AppSettings["QueryUsers"];
-            QueryUserRoles = ConfigurationManager.AppSettings["QueryUserRoles"];
-            UpdateUser = ConfigurationManager.AppSettings["UpdateUser"];
-            InsertUser = ConfigurationManager.AppSettings["InsertUser"];
-            InsertUserRole = ConfigurationManager.AppSettings["InsertUserRole"];
-            DeleteUser = ConfigurationManager.AppSettings["DeleteUser"];
-            DeleteUserRole = ConfigurationManager.AppSettings["DeleteUserRole"];
-            CheckIfUserExists = ConfigurationManager.AppSettings["CheckIfUserExists"];
-            CheckIfLoginExists = ConfigurationManager.AppSettings["CheckIfLoginExists"];
-            CheckIfUserMappedToRole = ConfigurationManager.AppSettings["CheckIfUserMappedToRole"];
-            CreateLogin = ConfigurationManager.AppSettings["CreateLogin"];
-            ResetLogin = ConfigurationManager.AppSettings["ResetLogin"];
-
-            AplicatieList = ConfigurationManager.AppSettings["AplicatieList"];
-            TipAccessList = ConfigurationManager.AppSettings["TipAccesList"];
-
-            depHierarchyQueries = new List<string>();
-            for (int i = 1; i <= depHierarchyCount; i++)
+            WriteLog("Application started!");
+            try
             {
-                try
-                {
-                    depHierarchyQueries.Add(ConfigurationManager.AppSettings[String.Format("C{0}List", i)]);
-                }
-                catch (Exception)
-                { //do nothing
-                }
-            }
+                //throw new Exception("etst");
+                lblTipAcces.Text = string.Empty;
+                lblAplicatie.Text = string.Empty;
+                btnDeleteRole.Visible = false;
+                WriteLog("Loading config settings...");
+                LoadConnectionStrings();
+                adminAplicConnectionString = ConfigurationManager.ConnectionStrings["AdminAplicConnectionString"].ConnectionString;
+                queryUsers = ConfigurationManager.AppSettings["QueryUsers"];
+                queryUserRoles = ConfigurationManager.AppSettings["QueryUserRoles"];
+                updateUser = ConfigurationManager.AppSettings["UpdateUser"];
+                insertUser = ConfigurationManager.AppSettings["InsertUser"];
+                insertUserRole = ConfigurationManager.AppSettings["InsertUserRole"];
+                deleteUser = ConfigurationManager.AppSettings["DeleteUser"];
+                deleteUserRole = ConfigurationManager.AppSettings["DeleteUserRole"];
+                checkIfUserExists = ConfigurationManager.AppSettings["CheckIfUserExists"];
+                checkIfLoginExists = ConfigurationManager.AppSettings["CheckIfLoginExists"];
+                checkIfUserMappedToRole = ConfigurationManager.AppSettings["CheckIfUserMappedToRole"];
+                createLogin = ConfigurationManager.AppSettings["CreateLogin"];
+                resetLogin = ConfigurationManager.AppSettings["ResetLogin"];
+                dropLogin = ConfigurationManager.AppSettings["DropLogin"];
 
-            LoadComboboxes();
-            ReloadPeople();
+                createDBUserForLogin = ConfigurationManager.AppSettings["CreateDBUserForLogin"];
+                addRoleMember = ConfigurationManager.AppSettings["AddRoleMember"];
+                dropRoleMember = ConfigurationManager.AppSettings["DropRoleMember"];
+
+
+                aplicatieList = ConfigurationManager.AppSettings["AplicatieList"];
+                tipAccessList = ConfigurationManager.AppSettings["TipAccesList"];
+
+                depHierarchyQueries = new List<string>();
+                for (int i = 1; i <= depHierarchyCount; i++)
+                {
+                    try
+                    {
+                        depHierarchyQueries.Add(ConfigurationManager.AppSettings[String.Format("C{0}List", i)]);
+                    }
+                    catch (Exception)
+                    { //do nothing
+                    }
+                }
+                WriteLog("Loading comboboxes...");
+                LoadComboboxes();
+                WriteLog("Loading people grid...");
+                ReloadPeople();
+            }
+            catch (Exception xcp) {
+                WriteLog(xcp.Message, 3);
+            }
         }
         private void LoadConnectionStrings()
         {
@@ -105,20 +125,24 @@ namespace LoginManager
 
         private void ReloadPeople(string searchParam = null)
         {
-            var queryUsers = string.Format(QueryUsers, searchParam == null ? string.Empty : searchParam);
+            
+            var queryUsers = string.Format(this.queryUsers, searchParam == null ? string.Empty : searchParam);
 
-            using (var connection = new SqlConnection(AdminAplicConnectionString))
+            using (var connection = new SqlConnection(adminAplicConnectionString))
             {
                 var command = new SqlCommand(queryUsers, connection);
+                WriteLog(string.Format("Opening connection to {0}...",adminAplicConnectionString));
                 connection.Open();
                 using (var reader = command.ExecuteReader())
                 {
 
                     DataTable dt = new DataTable();
                     dt.Load(reader);
+                    
                     gridPeople.AutoGenerateColumns = true;
                     gridPeople.DataSource = dt;
                     gridPeople.Refresh();
+                    WriteLog(string.Format("People loaded"));
 
                 }
             }
@@ -126,11 +150,13 @@ namespace LoginManager
 
         private void ReloadRoles(string searchParam = null)
         {
-            var qRoles = string.Format(QueryUserRoles, searchParam == null ? string.Empty : searchParam);
+            WriteLog("Loading permissions grid...");
+            var qRoles = string.Format(queryUserRoles, searchParam == null ? string.Empty : searchParam);
 
-            using (var connection = new SqlConnection(AdminAplicConnectionString))
+            using (var connection = new SqlConnection(adminAplicConnectionString))
             {
                 var command = new SqlCommand(qRoles, connection);
+                WriteLog(string.Format("Opening connection to {0}...", adminAplicConnectionString));
                 connection.Open();
                 using (var reader = command.ExecuteReader())
                 {
@@ -146,22 +172,45 @@ namespace LoginManager
                         lblTipAcces.Text = string.Empty;
                         lblServerInfo.Text = "";
                         lblLoginInfo.Text = "";
+                        chkSpecialChars.Visible = false;
+                        chkUpper.Visible = false;
+                        chkUseDigits.Visible = false;
+                        lblMinChars.Visible = false;
+                        btnResetPass.Visible = false;
+                        btnGeneratePassword.Visible = false;
+                        txtMinLength.Visible = false;
+                        txtPassword.Visible = false;
+                        lblUserInRole.Visible = false;
+                        btnDeleteLogin.Visible = false;
+                        btnTestCredential.Visible = false;
+                        btnDropRole.Visible = false;
+
+
                     }
                     else
                     {
+                        chkSpecialChars.Visible = true;
+                        chkUpper.Visible = true;
+                        chkUseDigits.Visible = true;
+                        lblMinChars.Visible = true;
+                        //btnResetPass.Visible = true;
+                        btnGeneratePassword.Visible = true;
+                        txtMinLength.Visible = true;
+                        txtPassword.Visible = true;
+                        lblUserInRole.Visible = true;
 
-                        CheckSQLLogin(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString);
-                        CheckDatabaseRole(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString.Replace("Initial Catalog=master", "Initial Catalog ="+apps.Where(a=>a.AppName==lblAplicatie.Text).First().DBName), lblTipAcces.Text);
+                        //CheckSQLLogin(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString);
+                        //CheckDatabaseRole(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName), access.Where(a => a.Display == lblTipAcces.Text).First().Value);
                     }
                     gridRoles.Refresh();
-
+                    WriteLog("Permissions grid loaded");
                 }
             }
 
         }
         private void CheckSQLLogin(string connString)
         {
-            var qCheckLogin = string.Format(CheckIfLoginExists, txtLogin.Text);
+            var qCheckLogin = string.Format(checkIfLoginExists, txtLogin.Text);
 
             using (var connection = new SqlConnection(connString))
             {
@@ -175,6 +224,7 @@ namespace LoginManager
                         lblLoginInfo.Text = "       Loginul exista pe serverul de mai sus.";
                         btnResetPass.Visible = true;
                         btnCreateLogin.Visible = false;
+                        btnDeleteLogin.Visible = true;
                     }
                     else
                     {
@@ -182,15 +232,16 @@ namespace LoginManager
                         lblLoginInfo.Text = "       Nu exista un login cu acest nume!!";
                         btnResetPass.Visible = false;
                         btnCreateLogin.Visible = true;
+                        btnDeleteLogin.Visible = false;
                     }
                 }
             }
         }
 
 
-        private void CheckDatabaseRole(string connString,string dbRole)
+        private void CheckDatabaseRole(string connString, string dbRole)
         {
-            var qCheckDBRole = string.Format(CheckIfUserMappedToRole, txtLogin.Text, dbRole);
+            var qCheckDBRole = string.Format(checkIfUserMappedToRole, txtLogin.Text, dbRole);
 
             using (var connection = new SqlConnection(connString))
             {
@@ -201,14 +252,16 @@ namespace LoginManager
                     if (reader.Read())
                     {
                         lblUserInRole.ForeColor = Color.Black;
-                        lblUserInRole.Text = "       Userul este in rolul"+dbRole;
-                        btnAddLoginToRole.Visible = true;
+                        lblUserInRole.Text = "       Userul este in rolul: " + dbRole;
+                        btnAddLoginToRole.Visible = false;
+                        btnDropRole.Visible = true;
                     }
                     else
                     {
                         lblUserInRole.ForeColor = Color.Red;
-                        lblUserInRole.Text = "       Userul nu are rolul: "+dbRole;
-                        btnAddLoginToRole.Visible = false;
+                        lblUserInRole.Text = "       Userul nu are rolul: " + dbRole;
+                        btnAddLoginToRole.Visible = true;
+                        btnDropRole.Visible = false;
                     }
                 }
             }
@@ -230,7 +283,7 @@ namespace LoginManager
 
             var queryComboLists = string.Format(depHierarchyQueries[index]);
 
-            using (var connection = new SqlConnection(AdminAplicConnectionString))
+            using (var connection = new SqlConnection(adminAplicConnectionString))
             {
                 var command = new SqlCommand(queryComboLists, connection);
                 connection.Open();
@@ -262,9 +315,9 @@ namespace LoginManager
         private void LoadAplicatieCombobox()
         {
             DataTable dt;
-            var qAplicatie = string.Format(AplicatieList);
+            var qAplicatie = string.Format(aplicatieList);
 
-            using (var connection = new SqlConnection(AdminAplicConnectionString))
+            using (var connection = new SqlConnection(adminAplicConnectionString))
             {
                 var command = new SqlCommand(qAplicatie, connection);
                 connection.Open();
@@ -310,9 +363,9 @@ namespace LoginManager
         private void LoadTipAccesCombobox()
         {
             DataTable dt;
-            var qtipAcces = string.Format(TipAccessList);
+            var qtipAcces = string.Format(tipAccessList);
 
-            using (var connection = new SqlConnection(AdminAplicConnectionString))
+            using (var connection = new SqlConnection(adminAplicConnectionString))
             {
                 var command = new SqlCommand(qtipAcces, connection);
                 connection.Open();
@@ -322,11 +375,11 @@ namespace LoginManager
                     dt = new DataTable();
 
                     dt.Load(reader);
-                    
+
 
                 }
             }
-            access.Add(new Classes.DatabaseRole() {Display="",Value="-1" });
+            access.Add(new Classes.DatabaseRole() { Display = "", Value = "-1" });
             foreach (DataRow row in dt.Rows)
             {
                 access.Add(new Classes.DatabaseRole() { Value = row["DBRole"].ToString(), Display = row["Label"].ToString() });
@@ -364,92 +417,107 @@ namespace LoginManager
 
         private void BtnUpdate_Click(object sender, EventArgs e)
         {
-            bool userExists = false;
-            var queryUpdateUser = string.Format(UpdateUser,
-                                                txtNume.Text,
-                                                txtPrenume.Text,
-                                                txtCNP.Text,
-                                                txtLogin.Text,
-                                                cmbC1.SelectedValue,
-                                                cmbC2.SelectedValue,
-                                                cmbC3.SelectedValue,
-                                                cmbC4.SelectedValue,
-                                                cmbC5.SelectedValue,
-                                                cmbC6.SelectedValue,
-                                                cmbC7.SelectedValue
-                                                );
-
-
-
-            var qInsertUser = string.Format(InsertUser, txtNume.Text,
-                                                txtPrenume.Text,
-                                                txtCNP.Text,
-                                                txtLogin.Text,
-                                                cmbC1.SelectedValue,
-                                                cmbC2.SelectedValue,
-                                                cmbC3.SelectedValue,
-                                                cmbC4.SelectedValue,
-                                                cmbC5.SelectedValue,
-                                                cmbC6.SelectedValue,
-                                                cmbC7.SelectedValue);
-            var qCheckUser = string.Format(CheckIfUserExists, txtLogin.Text);
-
-            using (var connection = new SqlConnection(AdminAplicConnectionString))
+            try
             {
-                var command = new SqlCommand(qCheckUser, connection);
-                connection.Open();
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        userExists = true;
+                bool userExists = false;
+                var queryUpdateUser = string.Format(updateUser,
+                                                    txtNume.Text,
+                                                    txtPrenume.Text,
+                                                    txtCNP.Text,
+                                                    txtLogin.Text,
+                                                    cmbC1.SelectedValue,
+                                                    cmbC2.SelectedValue,
+                                                    cmbC3.SelectedValue,
+                                                    cmbC4.SelectedValue,
+                                                    cmbC5.SelectedValue,
+                                                    cmbC6.SelectedValue,
+                                                    cmbC7.SelectedValue
+                                                    );
 
+
+
+                var qInsertUser = string.Format(insertUser, txtNume.Text,
+                                                    txtPrenume.Text,
+                                                    txtCNP.Text,
+                                                    txtLogin.Text,
+                                                    cmbC1.SelectedValue,
+                                                    cmbC2.SelectedValue,
+                                                    cmbC3.SelectedValue,
+                                                    cmbC4.SelectedValue,
+                                                    cmbC5.SelectedValue,
+                                                    cmbC6.SelectedValue,
+                                                    cmbC7.SelectedValue);
+                var qCheckUser = string.Format(checkIfUserExists, txtLogin.Text);
+
+                using (var connection = new SqlConnection(adminAplicConnectionString))
+                {
+                    var command = new SqlCommand(qCheckUser, connection);
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            userExists = true;
+
+                        }
+                    }
+                }
+
+                if (userExists)
+                {
+                    WriteLog("User exists!");
+                    WriteLog(queryUpdateUser);
+                    if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", queryUpdateUser), "USER EXISTENT", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                    {
+                        using (var connection = new SqlConnection(adminAplicConnectionString))
+                        {
+                            var command = new SqlCommand(queryUpdateUser, connection);
+                            connection.Open();
+                            try
+                            {
+                                command.ExecuteNonQuery();
+                                ReloadPeople();
+                                WriteLog("OK!", 2);
+                            }
+                            catch (Exception xcp)
+                            {
+                                WriteLog(xcp.Message, 3);
+                                MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    WriteLog("User not found!");
+                    WriteLog(qInsertUser);
+                    if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUser), "USER NOU", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                    {
+
+                        using (var connection = new SqlConnection(adminAplicConnectionString))
+                        {
+                            var command = new SqlCommand(qInsertUser, connection);
+                            connection.Open();
+                            try
+                            {
+                                command.ExecuteNonQuery();
+                                txtSearch.Text = txtLogin.Text;
+                                ReloadPeople(txtLogin.Text);
+                                WriteLog("OK!", 2);
+                            }
+                            catch (Exception xcp)
+                            {
+                                WriteLog(xcp.Message, 3);
+                                MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                
+                            }
+                        }
                     }
                 }
             }
-
-            if (userExists)
-            {
-                if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", queryUpdateUser), "USER EXISTENT", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                {
-                    using (var connection = new SqlConnection(AdminAplicConnectionString))
-                    {
-                        var command = new SqlCommand(queryUpdateUser, connection);
-                        connection.Open();
-                        try
-                        {
-                            command.ExecuteNonQuery();
-                            ReloadPeople();
-                        }
-                        catch (Exception xcp)
-                        {
-                            MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                }
-
-            }
-            else
-            {
-                if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUser), "USER NOU", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                {
-
-                    using (var connection = new SqlConnection(AdminAplicConnectionString))
-                    {
-                        var command = new SqlCommand(qInsertUser, connection);
-                        connection.Open();
-                        try
-                        {
-                            command.ExecuteNonQuery();
-                            txtSearch.Text = txtLogin.Text;
-                            ReloadPeople(txtLogin.Text);
-                        }
-                        catch (Exception xcp)
-                        {
-                            MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                }
+            catch (Exception xcp) {
+                WriteLog(xcp.Message, 3);
             }
 
         }
@@ -480,7 +548,7 @@ namespace LoginManager
                 ReloadRoles(gridPeople.Rows[e.RowIndex].Cells["Login"].FormattedValue.ToString());
 
             }
-            generatedPass = string.Empty;
+
 
         }
 
@@ -488,6 +556,7 @@ namespace LoginManager
 
         private void BtnClear_Click(object sender, EventArgs e)
         {
+            WriteLog("Clear fields!");
             txtCNP.Text = string.Empty;
             txtNume.Text = string.Empty;
             txtPrenume.Text = string.Empty;
@@ -499,15 +568,17 @@ namespace LoginManager
             cmbC5.SelectedValue = -1;
             cmbC6.SelectedValue = -1;
             cmbC7.SelectedValue = -1;
+
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            var qDeleteUser = string.Format(DeleteUser, txtLogin.Text);
+            
+            var qDeleteUser = string.Format(deleteUser, txtLogin.Text);
             if (MessageBox.Show(string.Format("Userul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUser), "Delete user?", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-
-                using (var connection = new SqlConnection(AdminAplicConnectionString))
+                WriteLog("Deleting user...");
+                using (var connection = new SqlConnection(adminAplicConnectionString))
                 {
                     var command = new SqlCommand(qDeleteUser, connection);
                     connection.Open();
@@ -515,9 +586,11 @@ namespace LoginManager
                     {
                         command.ExecuteNonQuery();
                         ReloadPeople();
+                        WriteLog("OK!",2);
                     }
                     catch (Exception xcp)
                     {
+                        WriteLog(xcp.Message, 3);
                         MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -528,11 +601,11 @@ namespace LoginManager
         {
             //if (lblAplicatie.Text == string.Empty || lblTipAcces.Text == string.Empty)
             //return;
-            var qDeleteUserRole = string.Format(DeleteUserRole, txtLogin.Text, lblAplicatie.Text, lblTipAcces.Text);
+            var qDeleteUserRole = string.Format(deleteUserRole, txtLogin.Text, lblAplicatie.Text, lblTipAcces.Text);
             if (MessageBox.Show(string.Format("Rolul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUserRole), "Delete Role?", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
 
-                using (var connection = new SqlConnection(AdminAplicConnectionString))
+                using (var connection = new SqlConnection(adminAplicConnectionString))
                 {
                     var command = new SqlCommand(qDeleteUserRole, connection);
                     connection.Open();
@@ -568,6 +641,10 @@ namespace LoginManager
                 var app = apps.Where(a => a.AppName == lblAplicatie.Text).First();
                 lblServerInfo.Text = "      " + app.ConnectionString;
 
+                CheckSQLLogin(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString);
+                CheckDatabaseRole(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName), access.Where(a => a.Display == lblTipAcces.Text).First().Value);
+
+
             }
             else
             {
@@ -584,13 +661,13 @@ namespace LoginManager
                 MessageBox.Show("Selectati aplicatia si tipul de acces!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            var qInsertUserRole = string.Format(InsertUserRole, txtLogin.Text,
+            var qInsertUserRole = string.Format(insertUserRole, txtLogin.Text,
                                     cmbAplicatie.Text,
                                     cmbTipAcces.Text);
             if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUserRole), "Adaugare rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
 
-                using (var connection = new SqlConnection(AdminAplicConnectionString))
+                using (var connection = new SqlConnection(adminAplicConnectionString))
                 {
                     var command = new SqlCommand(qInsertUserRole, connection);
                     connection.Open();
@@ -610,9 +687,8 @@ namespace LoginManager
 
         private void BtnCreateLogin_Click(object sender, EventArgs e)
         {
-            generatedPass = generatedPass == string.Empty ? PasswordUtility.PasswordGenerator.PwGenerator.Generate(8, true, true, true).ReadString() : generatedPass;
-            var qCreateLogin = string.Format(CreateLogin, txtLogin.Text,
-                                  generatedPass);
+            var qCreateLogin = string.Format(createLogin, txtLogin.Text,
+                                  txtPassword.Text);
             CreateOrModifyLogin(qCreateLogin);
         }
 
@@ -643,11 +719,152 @@ namespace LoginManager
 
         private void BtnResetPass_Click(object sender, EventArgs e)
         {
-            generatedPass = string.Empty;
-            generatedPass = generatedPass == string.Empty ? PasswordUtility.PasswordGenerator.PwGenerator.Generate(8, true, true, true).ReadString() : generatedPass;
-            var qResetLogin = string.Format(ResetLogin, txtLogin.Text,
-                      generatedPass);
+
+            var qResetLogin = string.Format(resetLogin, txtLogin.Text,
+                      txtPassword.Text);
             CreateOrModifyLogin(qResetLogin);
+        }
+
+        private void BtnGeneratePassword_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                txtPassword.Text = PasswordUtility.PasswordGenerator.PwGenerator.Generate(Int32.Parse(txtMinLength.Text), chkUpper.Checked, chkUseDigits.Checked, chkSpecialChars.Checked).ReadString().Replace("'","-");
+            }
+            catch (Exception) { }
+        }
+
+        private void BtnDeleteLogin_Click(object sender, EventArgs e)
+        {
+            var qDropLogin = string.Format(dropLogin, txtLogin.Text);
+            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nLoginul va fi sters ireversibil!\nDoriti sa continuati?\n\n{0}", qDropLogin), "Steregere login", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+
+                using (var connection = new SqlConnection(lblServerInfo.Text))
+                {
+                    var command = new SqlCommand(qDropLogin, connection);
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        btnCreateLogin.Visible = true;
+                        btnDeleteLogin.Visible = false;
+                        btnResetPass.Visible = false;
+
+
+                    }
+                    catch (Exception xcp)
+                    {
+                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                ReloadRoles(txtLogin.Text);
+            }
+        }
+
+        private void BtnAddLoginToRole_Click(object sender, EventArgs e)
+        {
+            var qCreateDbUser = string.Format(createDBUserForLogin, txtLogin.Text);
+            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul se va crea in baza de date!\nDoriti sa continuati?\n\n{0}", qCreateDbUser), "Creare user", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+
+                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
+                {
+                    var command = new SqlCommand(qCreateDbUser, connection);
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+
+                    }
+                    catch (Exception xcp)
+                    {
+                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    finally
+                    {
+                        AddDBRoleMember();
+                    }
+                }
+                //ReloadRoles(txtLogin.Text);
+            }
+        }
+
+        private void AddDBRoleMember()
+        {
+            var qAddRoleMember = string.Format(addRoleMember, access.Where(a => a.Display == lblTipAcces.Text).First().Value, txtLogin.Text);
+            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi adaugat in rol!\nDoriti sa continuati?\n\n{0}", qAddRoleMember), "Adaugare user in rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+
+                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
+                {
+                    var command = new SqlCommand(qAddRoleMember, connection);
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        btnAddLoginToRole.Visible = false;
+                        btnDropRole.Visible = true;
+                        lblUserInRole.Text = "       Needs refresh!";
+
+                    }
+                    catch (Exception xcp)
+                    {
+                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                }
+                //ReloadRoles(txtLogin.Text);
+            }
+        }
+
+        private void BtnDropRole_Click(object sender, EventArgs e)
+        {
+            var qDropRoleMember = string.Format(dropRoleMember, access.Where(a => a.Display == lblTipAcces.Text).First().Value, txtLogin.Text);
+            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi sters din rol!\nDoriti sa continuati?\n\n{0}", qDropRoleMember), "Stergere user din rol", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+
+                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
+                {
+                    var command = new SqlCommand(qDropRoleMember, connection);
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        btnDropRole.Visible = false;
+                        btnAddLoginToRole.Visible = true;
+                        lblUserInRole.Text = "       Needs refresh!";
+                       
+                    }
+                    catch (Exception xcp)
+                    {
+                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                }
+
+            }
+        }
+
+        private void WriteLog(string message, int? type=null) {
+            ListViewItem li = new ListViewItem();
+            switch (type) {
+                case 3:
+                    li.ForeColor = Color.Red;
+                    break;
+                case 2:
+                    li.ForeColor = Color.Green;
+                    break;
+                default:
+                    li.ForeColor = Color.Black;
+                    break;
+
+            }
+               
+           
+            li.Text = message;
+            
+            logList.Items.Insert(0,li);
         }
     }
 }
