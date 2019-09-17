@@ -45,6 +45,7 @@ namespace LoginManager
         private string createDBUserForLogin = string.Empty;
         private string addRoleMember = string.Empty;
         private string dropRoleMember = string.Empty;
+        private string alterUserWithLogin = string.Empty;
 
 
 
@@ -89,6 +90,7 @@ namespace LoginManager
                 createDBUserForLogin = ConfigurationManager.AppSettings["CreateDBUserForLogin"];
                 addRoleMember = ConfigurationManager.AppSettings["AddRoleMember"];
                 dropRoleMember = ConfigurationManager.AppSettings["DropRoleMember"];
+                alterUserWithLogin = ConfigurationManager.AppSettings["AlterUserWithLogin"];
 
 
                 aplicatieList = ConfigurationManager.AppSettings["AplicatieList"];
@@ -226,6 +228,7 @@ namespace LoginManager
                         btnResetPass.Visible = true;
                         btnCreateLogin.Visible = false;
                         btnDeleteLogin.Visible = true;
+                        //btnTestCredential.Visible = true;
                     }
                     else
                     {
@@ -234,6 +237,7 @@ namespace LoginManager
                         btnResetPass.Visible = false;
                         btnCreateLogin.Visible = true;
                         btnDeleteLogin.Visible = false;
+                        btnTestCredential.Visible = false;
                     }
                 }
             }
@@ -751,7 +755,7 @@ namespace LoginManager
             try
             {
 
-                txtPassword.Text = PasswordUtility.PasswordGenerator.PwGenerator.Generate(Int32.Parse(txtMinLength.Text), chkUpper.Checked, chkUseDigits.Checked, chkSpecialChars.Checked).ReadString().Replace("'", "-");
+                txtPassword.Text = PasswordUtility.PasswordGenerator.PwGenerator.Generate(Int32.Parse(txtMinLength.Text), chkUpper.Checked, chkUseDigits.Checked, chkSpecialChars.Checked).ReadString().Replace("'", "-").Replace(";", "_");
                 WriteLog(txtPassword.Text, 4);
             }
             catch (Exception)
@@ -810,12 +814,40 @@ namespace LoginManager
                     }
                     catch (Exception xcp)
                     {
-                        WriteLog(xcp.Message, 3);
-                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        WriteLog("userul nu a fost creat, probabil exista"+xcp.Message, 3);
+                        //MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        AlterUserWithLoginIfExists();
                     }
                     finally
                     {
                         AddDBRoleMember();
+                    }
+                }
+                //ReloadRoles(txtLogin.Text);
+            }
+        }
+
+        private void AlterUserWithLoginIfExists() {
+            var qAlterUSer = string.Format(alterUserWithLogin, txtLogin.Text);
+            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul se va crea in baza de date!\nDoriti sa continuati?\n\n{0}", qAlterUSer), "alter user", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+                WriteLog("Creare user db...");
+                WriteLog(qAlterUSer, 1);
+
+                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
+                {
+                    var command = new SqlCommand(qAlterUSer, connection);
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        WriteLog("OK!", 2);
+
+                    }
+                    catch (Exception xcp)
+                    {
+                        WriteLog("userul nu a fost modificat" + xcp.Message, 3);
+                        //MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 //ReloadRoles(txtLogin.Text);
@@ -930,9 +962,13 @@ namespace LoginManager
                 {
 
                     connection.Open();
-                    WriteLog("Connection successful!", 1);
+                    connection.Close();
+                    connection.Dispose();
+
+                    WriteLog("Connection successful!" + connection.State, 1);
 
                 }
+                
             }
             catch (Exception xcp)
             {

@@ -737,7 +737,7 @@
             // 
             this.btnDropRole.Image = ((System.Drawing.Image)(resources.GetObject("btnDropRole.Image")));
             this.btnDropRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDropRole.Location = new System.Drawing.Point(610, 244);
+            this.btnDropRole.Location = new System.Drawing.Point(473, 245);
             this.btnDropRole.Name = "btnDropRole";
             this.btnDropRole.Size = new System.Drawing.Size(105, 32);
             this.btnDropRole.TabIndex = 14;
