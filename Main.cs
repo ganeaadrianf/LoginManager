@@ -128,9 +128,62 @@ namespace LoginManager
 
         private void ReloadPeople(string searchParam = null)
         {
+            var queryUsers = string.Empty;
+            List<int> vals = new List<int>();
+            int result = -1;
+            if (Int32.TryParse(textBox1.Text, out result))
+                vals.Add(result);
+            else
+                vals.Add(-1);
 
-            var queryUsers = string.Format(this.queryUsers, searchParam == null ? string.Empty : searchParam);
+            if (Int32.TryParse(textBox2.Text, out result))
+                vals.Add(result);
+            else
+                vals.Add(-1);
 
+            if (Int32.TryParse(textBox3.Text, out result))
+                vals.Add(result);
+            else
+                vals.Add(-1);
+
+            if (Int32.TryParse(textBox4.Text, out result))
+                vals.Add(result);
+            else
+                vals.Add(-1);
+
+            if (Int32.TryParse(textBox5.Text, out result))
+                vals.Add(result);
+            else
+                vals.Add(-1);
+
+            if (Int32.TryParse(textBox6.Text, out result))
+                vals.Add(result);
+            else
+                vals.Add(-1);
+
+            if (Int32.TryParse(textBox7.Text, out result))
+                vals.Add(result);
+            else
+                vals.Add(-1);
+
+            queryUsers = string.Format(this.queryUsers, searchParam == null ? string.Empty : searchParam,
+               vals[0],
+               vals[1],
+               vals[2],
+               vals[3],
+               vals[4],
+               vals[5],
+               vals[6],
+                textBox1.Text,
+                textBox2.Text,
+                textBox3.Text,
+                textBox4.Text,
+                textBox5.Text,
+                textBox6.Text,
+                textBox7.Text
+                );
+            //MessageBox.Show(queryUsers);
+            WriteLog(queryUsers, 2);
             using (var connection = new SqlConnection(adminAplicConnectionString))
             {
                 var command = new SqlCommand(queryUsers, connection);
@@ -814,7 +867,7 @@ namespace LoginManager
                     }
                     catch (Exception xcp)
                     {
-                        WriteLog("userul nu a fost creat, probabil exista"+xcp.Message, 3);
+                        WriteLog("userul nu a fost creat, probabil exista" + xcp.Message, 3);
                         //MessageBox.Show(string.Format("Comanda e esuat!\n{0}", xcp.Message), "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         AlterUserWithLoginIfExists();
                     }
@@ -827,7 +880,8 @@ namespace LoginManager
             }
         }
 
-        private void AlterUserWithLoginIfExists() {
+        private void AlterUserWithLoginIfExists()
+        {
             var qAlterUSer = string.Format(alterUserWithLogin, txtLogin.Text);
             if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul se va crea in baza de date!\nDoriti sa continuati?\n\n{0}", qAlterUSer), "alter user", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
@@ -953,11 +1007,11 @@ namespace LoginManager
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(lblServerInfo.Text);
             builder.IntegratedSecurity = false;
             var connStr = string.Format("Data Source={0};Initial Catalog={1};Integrated Security=false;User Id={2};Password={3};", builder.DataSource, builder.InitialCatalog, txtLogin.Text, txtPassword.Text);
-           
+
             WriteLog("Connecting to: " + connStr);
             try
             {
-               
+
                 using (var connection = new SqlConnection(connStr))
                 {
 
@@ -968,12 +1022,19 @@ namespace LoginManager
                     WriteLog("Connection successful!" + connection.State, 1);
 
                 }
-                
+
             }
             catch (Exception xcp)
             {
                 WriteLog("Connection failed!\n" + xcp.Message, 3);
             }
         }
+
+        private void BtnSearch_Click(object sender, EventArgs e)
+        {
+            ReloadPeople(txtSearch.Text);
+        }
+
+
     }
 }
