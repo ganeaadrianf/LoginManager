@@ -30,6 +30,7 @@ namespace LoginManager
 
         private List<string> depHierarchyQueries = new List<string>();
 
+        private string depHierarchyQuery = string.Empty;
         private string updateUser = string.Empty;
         private string insertUser = string.Empty;
         private string insertUserRole = string.Empty;
@@ -96,17 +97,18 @@ namespace LoginManager
                 aplicatieList = ConfigurationManager.AppSettings["AplicatieList"];
                 tipAccessList = ConfigurationManager.AppSettings["TipAccesList"];
 
-                depHierarchyQueries = new List<string>();
-                for (int i = 1; i <= depHierarchyCount; i++)
-                {
-                    try
-                    {
-                        depHierarchyQueries.Add(ConfigurationManager.AppSettings[String.Format("C{0}List", i)]);
-                    }
-                    catch (Exception)
-                    { //do nothing
-                    }
-                }
+                //depHierarchyQueries = new List<string>();
+                //for (int i = 1; i <= depHierarchyCount; i++)
+                //{
+                //    try
+                //    {
+                //        depHierarchyQueries.Add(ConfigurationManager.AppSettings[String.Format("C{0}List", i)]);
+                //    }
+                //    catch (Exception)
+                //    { //do nothing
+                //    }
+                //}
+                depHierarchyQuery=ConfigurationManager.AppSettings[String.Format("CList")];
                 WriteLog("Loading comboboxes...");
                 LoadComboboxes();
                 WriteLog("Loading people grid...");
@@ -329,17 +331,17 @@ namespace LoginManager
 
         private void LoadComboboxes()
         {
-            for (int i = 0; i < depHierarchyQueries.Count; i++)
-            {
-                LoadCombobox(i);
-            }
+            //for (int i = 0; i < depHierarchyQueries.Count; i++)
+            //{
+            LoadCombobox();
+            //}
             LoadAplicatieCombobox();
             LoadTipAccesCombobox();
         }
-        private void LoadCombobox(int index)
+        private void LoadCombobox()
         {
-
-            var queryComboLists = string.Format(depHierarchyQueries[index]);
+            DataTable dt;
+            var queryComboLists = string.Format(depHierarchyQuery);
 
             using (var connection = new SqlConnection(adminAplicConnectionString))
             {
@@ -348,25 +350,34 @@ namespace LoginManager
                 using (var reader = command.ExecuteReader())
                 {
 
-                    DataTable dt = new DataTable();
+                    dt = new DataTable();
 
                     dt.Load(reader);
-                    var emptyRow = dt.NewRow();
-                    emptyRow["Valoare"] = -1;
-                    emptyRow["Denumire"] = string.Empty;
-                    dt.Rows.Add(emptyRow);
-                    var dv = new DataView(dt, "", "Denumire", DataViewRowState.CurrentRows);
-                    var combo = (ComboBox)(this.Controls.Find(string.Format("cmbC{0}", index + 1), true)[0]);
-                    combo.DataSource = dv;
-                    combo.DisplayMember = "Denumire";
-                    combo.ValueMember = "Valoare";
 
-
-
-                    combo.Refresh();
 
                 }
             }
+           
+            var emptyRow = dt.NewRow();
+            emptyRow["Valoare"] = -1;
+            emptyRow["Denumire"] = string.Empty;
+            dt.Rows.Add(emptyRow);
+
+
+            var dv = new DataView(dt, "", "Denumire", DataViewRowState.CurrentRows);
+
+            for (int i = 0; i < 7; i++)
+            {
+                var combo = (ComboBox)(this.Controls.Find(string.Format("cmbC{0}", i + 1), true)[0]);
+                combo.DataSource = dv;
+                combo.DisplayMember = "Denumire";
+                combo.ValueMember = "Valoare";
+                //combo.Refresh();
+            }
+
+
+
+            
         }
 
 
@@ -483,13 +494,13 @@ namespace LoginManager
                                                     txtPrenume.Text,
                                                     txtCNP.Text,
                                                     txtLogin.Text,
-                                                    cmbC1.SelectedValue,
-                                                    cmbC2.SelectedValue,
-                                                    cmbC3.SelectedValue,
-                                                    cmbC4.SelectedValue,
-                                                    cmbC5.SelectedValue,
-                                                    cmbC6.SelectedValue,
-                                                    cmbC7.SelectedValue
+                                                    cmbC1.SelectedValue == null ? -1 : cmbC1.SelectedValue,
+                                                    cmbC2.SelectedValue == null ? -1 : cmbC2.SelectedValue,
+                                                    cmbC3.SelectedValue == null ? -1 : cmbC3.SelectedValue,
+                                                    cmbC4.SelectedValue == null ? -1 : cmbC4.SelectedValue,
+                                                    cmbC5.SelectedValue == null ? -1 : cmbC5.SelectedValue,
+                                                    cmbC6.SelectedValue == null ? -1 : cmbC6.SelectedValue,
+                                                    cmbC7.SelectedValue == null ? -1 : cmbC7.SelectedValue
                                                     );
 
 
@@ -1003,7 +1014,7 @@ namespace LoginManager
 
         private void BtnTestCredential_Click(object sender, EventArgs e)
         {
-            WriteLog("Functionalitate dezactivata!!",3);
+            WriteLog("Functionalitate dezactivata!!", 3);
             return;
             //lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName))
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(lblServerInfo.Text);
