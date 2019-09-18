@@ -137,6 +137,8 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -147,13 +149,15 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer6);
-            this.splitContainer1.Size = new System.Drawing.Size(1370, 501);
-            this.splitContainer1.SplitterDistance = 858;
+            this.splitContainer1.Size = new System.Drawing.Size(1370, 665);
+            this.splitContainer1.SplitterDistance = 756;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer2.IsSplitterFixed = true;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -181,8 +185,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(858, 501);
-            this.splitContainer2.SplitterDistance = 121;
+            this.splitContainer2.Size = new System.Drawing.Size(756, 665);
+            this.splitContainer2.SplitterDistance = 124;
             this.splitContainer2.TabIndex = 0;
             // 
             // label18
@@ -327,6 +331,8 @@
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer3.IsSplitterFixed = true;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
             this.splitContainer3.Name = "splitContainer3";
             this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -338,8 +344,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(858, 376);
-            this.splitContainer3.SplitterDistance = 105;
+            this.splitContainer3.Size = new System.Drawing.Size(756, 537);
+            this.splitContainer3.SplitterDistance = 189;
             this.splitContainer3.TabIndex = 1;
             // 
             // gridPeople
@@ -351,7 +357,7 @@
             this.gridPeople.Location = new System.Drawing.Point(0, 0);
             this.gridPeople.Name = "gridPeople";
             this.gridPeople.ReadOnly = true;
-            this.gridPeople.Size = new System.Drawing.Size(858, 105);
+            this.gridPeople.Size = new System.Drawing.Size(756, 189);
             this.gridPeople.TabIndex = 0;
             this.gridPeople.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridPeople_CellClick);
             this.gridPeople.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridPeople_RowEnter);
@@ -359,8 +365,11 @@
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer4.IsSplitterFixed = true;
             this.splitContainer4.Location = new System.Drawing.Point(0, 0);
             this.splitContainer4.Name = "splitContainer4";
+            this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer4.Panel1
             // 
@@ -384,11 +393,8 @@
             this.splitContainer4.Panel2.Controls.Add(this.btnCreateLogin);
             this.splitContainer4.Panel2.Controls.Add(this.lblLoginInfo);
             this.splitContainer4.Panel2.Controls.Add(this.lblServerInfo);
-            this.splitContainer4.Panel2.Controls.Add(this.lblTipAcces);
-            this.splitContainer4.Panel2.Controls.Add(this.btnDeleteRole);
-            this.splitContainer4.Panel2.Controls.Add(this.lblAplicatie);
-            this.splitContainer4.Size = new System.Drawing.Size(858, 267);
-            this.splitContainer4.SplitterDistance = 279;
+            this.splitContainer4.Size = new System.Drawing.Size(756, 344);
+            this.splitContainer4.SplitterDistance = 145;
             this.splitContainer4.TabIndex = 0;
             // 
             // splitContainer5
@@ -396,7 +402,6 @@
             this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer5.Location = new System.Drawing.Point(0, 0);
             this.splitContainer5.Name = "splitContainer5";
-            this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer5.Panel1
             // 
@@ -407,8 +412,11 @@
             this.splitContainer5.Panel2.Controls.Add(this.btnAddRole);
             this.splitContainer5.Panel2.Controls.Add(this.cmbTipAcces);
             this.splitContainer5.Panel2.Controls.Add(this.cmbAplicatie);
-            this.splitContainer5.Size = new System.Drawing.Size(279, 267);
-            this.splitContainer5.SplitterDistance = 133;
+            this.splitContainer5.Panel2.Controls.Add(this.btnDeleteRole);
+            this.splitContainer5.Panel2.Controls.Add(this.lblAplicatie);
+            this.splitContainer5.Panel2.Controls.Add(this.lblTipAcces);
+            this.splitContainer5.Size = new System.Drawing.Size(756, 145);
+            this.splitContainer5.SplitterDistance = 231;
             this.splitContainer5.TabIndex = 0;
             // 
             // gridRoles
@@ -420,7 +428,7 @@
             this.gridRoles.Location = new System.Drawing.Point(0, 0);
             this.gridRoles.Name = "gridRoles";
             this.gridRoles.ReadOnly = true;
-            this.gridRoles.Size = new System.Drawing.Size(279, 133);
+            this.gridRoles.Size = new System.Drawing.Size(231, 145);
             this.gridRoles.TabIndex = 1;
             this.gridRoles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_CellClick);
             this.gridRoles.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_RowEnter);
@@ -429,7 +437,7 @@
             // 
             this.btnAddRole.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRole.Image")));
             this.btnAddRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAddRole.Location = new System.Drawing.Point(254, 1);
+            this.btnAddRole.Location = new System.Drawing.Point(274, 61);
             this.btnAddRole.Name = "btnAddRole";
             this.btnAddRole.Size = new System.Drawing.Size(96, 32);
             this.btnAddRole.TabIndex = 4;
@@ -440,7 +448,7 @@
             // cmbTipAcces
             // 
             this.cmbTipAcces.FormattingEnabled = true;
-            this.cmbTipAcces.Location = new System.Drawing.Point(127, 8);
+            this.cmbTipAcces.Location = new System.Drawing.Point(147, 68);
             this.cmbTipAcces.Name = "cmbTipAcces";
             this.cmbTipAcces.Size = new System.Drawing.Size(121, 21);
             this.cmbTipAcces.TabIndex = 3;
@@ -448,7 +456,7 @@
             // cmbAplicatie
             // 
             this.cmbAplicatie.FormattingEnabled = true;
-            this.cmbAplicatie.Location = new System.Drawing.Point(0, 8);
+            this.cmbAplicatie.Location = new System.Drawing.Point(19, 68);
             this.cmbAplicatie.Name = "cmbAplicatie";
             this.cmbAplicatie.Size = new System.Drawing.Size(121, 21);
             this.cmbAplicatie.TabIndex = 2;
@@ -457,7 +465,7 @@
             // 
             this.btnDropRole.Image = ((System.Drawing.Image)(resources.GetObject("btnDropRole.Image")));
             this.btnDropRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDropRole.Location = new System.Drawing.Point(473, 245);
+            this.btnDropRole.Location = new System.Drawing.Point(491, 134);
             this.btnDropRole.Name = "btnDropRole";
             this.btnDropRole.Size = new System.Drawing.Size(105, 32);
             this.btnDropRole.TabIndex = 14;
@@ -469,7 +477,7 @@
             // 
             this.btnTestCredential.Image = ((System.Drawing.Image)(resources.GetObject("btnTestCredential.Image")));
             this.btnTestCredential.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnTestCredential.Location = new System.Drawing.Point(473, 69);
+            this.btnTestCredential.Location = new System.Drawing.Point(491, 4);
             this.btnTestCredential.Name = "btnTestCredential";
             this.btnTestCredential.Size = new System.Drawing.Size(141, 33);
             this.btnTestCredential.TabIndex = 12;
@@ -481,7 +489,7 @@
             // 
             this.btnDeleteLogin.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteLogin.Image")));
             this.btnDeleteLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDeleteLogin.Location = new System.Drawing.Point(597, 132);
+            this.btnDeleteLogin.Location = new System.Drawing.Point(614, 47);
             this.btnDeleteLogin.Name = "btnDeleteLogin";
             this.btnDeleteLogin.Size = new System.Drawing.Size(118, 33);
             this.btnDeleteLogin.TabIndex = 16;
@@ -493,7 +501,7 @@
             // 
             this.btnGeneratePassword.Image = ((System.Drawing.Image)(resources.GetObject("btnGeneratePassword.Image")));
             this.btnGeneratePassword.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnGeneratePassword.Location = new System.Drawing.Point(473, 189);
+            this.btnGeneratePassword.Location = new System.Drawing.Point(490, 91);
             this.btnGeneratePassword.Name = "btnGeneratePassword";
             this.btnGeneratePassword.Size = new System.Drawing.Size(134, 33);
             this.btnGeneratePassword.TabIndex = 11;
@@ -503,7 +511,7 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(397, 196);
+            this.txtPassword.Location = new System.Drawing.Point(394, 98);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(70, 20);
             this.txtPassword.TabIndex = 10;
@@ -512,7 +520,7 @@
             // lblMinChars
             // 
             this.lblMinChars.AutoSize = true;
-            this.lblMinChars.Location = new System.Drawing.Point(15, 200);
+            this.lblMinChars.Location = new System.Drawing.Point(12, 102);
             this.lblMinChars.Name = "lblMinChars";
             this.lblMinChars.Size = new System.Drawing.Size(82, 13);
             this.lblMinChars.TabIndex = 17;
@@ -520,7 +528,7 @@
             // 
             // txtMinLength
             // 
-            this.txtMinLength.Location = new System.Drawing.Point(99, 196);
+            this.txtMinLength.Location = new System.Drawing.Point(96, 98);
             this.txtMinLength.MaxLength = 2;
             this.txtMinLength.Name = "txtMinLength";
             this.txtMinLength.Size = new System.Drawing.Size(21, 20);
@@ -533,7 +541,7 @@
             this.chkUseDigits.AutoSize = true;
             this.chkUseDigits.Checked = true;
             this.chkUseDigits.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkUseDigits.Location = new System.Drawing.Point(338, 198);
+            this.chkUseDigits.Location = new System.Drawing.Point(335, 100);
             this.chkUseDigits.Name = "chkUseDigits";
             this.chkUseDigits.Size = new System.Drawing.Size(53, 17);
             this.chkUseDigits.TabIndex = 9;
@@ -545,7 +553,7 @@
             this.chkSpecialChars.AutoSize = true;
             this.chkSpecialChars.Checked = true;
             this.chkSpecialChars.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkSpecialChars.Location = new System.Drawing.Point(212, 199);
+            this.chkSpecialChars.Location = new System.Drawing.Point(209, 101);
             this.chkSpecialChars.Name = "chkSpecialChars";
             this.chkSpecialChars.Size = new System.Drawing.Size(120, 17);
             this.chkSpecialChars.TabIndex = 8;
@@ -557,7 +565,7 @@
             this.chkUpper.AutoSize = true;
             this.chkUpper.Checked = true;
             this.chkUpper.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkUpper.Location = new System.Drawing.Point(126, 198);
+            this.chkUpper.Location = new System.Drawing.Point(123, 100);
             this.chkUpper.Name = "chkUpper";
             this.chkUpper.Size = new System.Drawing.Size(80, 17);
             this.chkUpper.TabIndex = 7;
@@ -568,7 +576,7 @@
             // 
             this.btnAddLoginToRole.Image = ((System.Drawing.Image)(resources.GetObject("btnAddLoginToRole.Image")));
             this.btnAddLoginToRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAddLoginToRole.Location = new System.Drawing.Point(473, 244);
+            this.btnAddLoginToRole.Location = new System.Drawing.Point(491, 133);
             this.btnAddLoginToRole.Name = "btnAddLoginToRole";
             this.btnAddLoginToRole.Size = new System.Drawing.Size(117, 33);
             this.btnAddLoginToRole.TabIndex = 13;
@@ -583,11 +591,10 @@
             this.lblUserInRole.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUserInRole.Image = ((System.Drawing.Image)(resources.GetObject("lblUserInRole.Image")));
             this.lblUserInRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblUserInRole.Location = new System.Drawing.Point(14, 245);
+            this.lblUserInRole.Location = new System.Drawing.Point(12, 139);
             this.lblUserInRole.MaximumSize = new System.Drawing.Size(500, 0);
             this.lblUserInRole.Name = "lblUserInRole";
-            this.lblUserInRole.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
-            this.lblUserInRole.Size = new System.Drawing.Size(114, 40);
+            this.lblUserInRole.Size = new System.Drawing.Size(114, 20);
             this.lblUserInRole.TabIndex = 11;
             this.lblUserInRole.Tag = "";
             this.lblUserInRole.Text = "       user in role";
@@ -597,7 +604,7 @@
             // 
             this.btnResetPass.Image = ((System.Drawing.Image)(resources.GetObject("btnResetPass.Image")));
             this.btnResetPass.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnResetPass.Location = new System.Drawing.Point(473, 132);
+            this.btnResetPass.Location = new System.Drawing.Point(489, 47);
             this.btnResetPass.Name = "btnResetPass";
             this.btnResetPass.Size = new System.Drawing.Size(107, 33);
             this.btnResetPass.TabIndex = 15;
@@ -609,7 +616,7 @@
             // 
             this.btnCreateLogin.Image = ((System.Drawing.Image)(resources.GetObject("btnCreateLogin.Image")));
             this.btnCreateLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCreateLogin.Location = new System.Drawing.Point(473, 132);
+            this.btnCreateLogin.Location = new System.Drawing.Point(490, 47);
             this.btnCreateLogin.Name = "btnCreateLogin";
             this.btnCreateLogin.Size = new System.Drawing.Size(118, 33);
             this.btnCreateLogin.TabIndex = 9;
@@ -624,11 +631,10 @@
             this.lblLoginInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLoginInfo.Image = ((System.Drawing.Image)(resources.GetObject("lblLoginInfo.Image")));
             this.lblLoginInfo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblLoginInfo.Location = new System.Drawing.Point(14, 131);
+            this.lblLoginInfo.Location = new System.Drawing.Point(12, 52);
             this.lblLoginInfo.MaximumSize = new System.Drawing.Size(500, 0);
             this.lblLoginInfo.Name = "lblLoginInfo";
-            this.lblLoginInfo.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
-            this.lblLoginInfo.Size = new System.Drawing.Size(106, 40);
+            this.lblLoginInfo.Size = new System.Drawing.Size(106, 20);
             this.lblLoginInfo.TabIndex = 8;
             this.lblLoginInfo.Tag = "";
             this.lblLoginInfo.Text = "     login exists";
@@ -640,11 +646,10 @@
             this.lblServerInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblServerInfo.Image = ((System.Drawing.Image)(resources.GetObject("lblServerInfo.Image")));
             this.lblServerInfo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblServerInfo.Location = new System.Drawing.Point(14, 62);
+            this.lblServerInfo.Location = new System.Drawing.Point(12, 9);
             this.lblServerInfo.MaximumSize = new System.Drawing.Size(500, 0);
             this.lblServerInfo.Name = "lblServerInfo";
-            this.lblServerInfo.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
-            this.lblServerInfo.Size = new System.Drawing.Size(77, 40);
+            this.lblServerInfo.Size = new System.Drawing.Size(77, 20);
             this.lblServerInfo.TabIndex = 7;
             this.lblServerInfo.Tag = "";
             this.lblServerInfo.Text = "     con str";
@@ -653,7 +658,7 @@
             // lblTipAcces
             // 
             this.lblTipAcces.AutoSize = true;
-            this.lblTipAcces.Location = new System.Drawing.Point(76, 20);
+            this.lblTipAcces.Location = new System.Drawing.Point(79, 25);
             this.lblTipAcces.Name = "lblTipAcces";
             this.lblTipAcces.Size = new System.Drawing.Size(62, 13);
             this.lblTipAcces.TabIndex = 5;
@@ -663,7 +668,7 @@
             // 
             this.btnDeleteRole.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteRole.Image")));
             this.btnDeleteRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDeleteRole.Location = new System.Drawing.Point(144, 9);
+            this.btnDeleteRole.Location = new System.Drawing.Point(147, 14);
             this.btnDeleteRole.Name = "btnDeleteRole";
             this.btnDeleteRole.Size = new System.Drawing.Size(195, 35);
             this.btnDeleteRole.TabIndex = 5;
@@ -674,7 +679,7 @@
             // lblAplicatie
             // 
             this.lblAplicatie.AutoSize = true;
-            this.lblAplicatie.Location = new System.Drawing.Point(13, 20);
+            this.lblAplicatie.Location = new System.Drawing.Point(16, 25);
             this.lblAplicatie.Name = "lblAplicatie";
             this.lblAplicatie.Size = new System.Drawing.Size(57, 13);
             this.lblAplicatie.TabIndex = 4;
@@ -722,7 +727,7 @@
             // splitContainer6.Panel2
             // 
             this.splitContainer6.Panel2.Controls.Add(this.logList);
-            this.splitContainer6.Size = new System.Drawing.Size(508, 501);
+            this.splitContainer6.Size = new System.Drawing.Size(610, 665);
             this.splitContainer6.SplitterDistance = 331;
             this.splitContainer6.TabIndex = 31;
             // 
@@ -969,7 +974,7 @@
             this.logList.LabelWrap = false;
             this.logList.Location = new System.Drawing.Point(0, 0);
             this.logList.Name = "logList";
-            this.logList.Size = new System.Drawing.Size(508, 166);
+            this.logList.Size = new System.Drawing.Size(610, 330);
             this.logList.TabIndex = 0;
             this.logList.UseCompatibleStateImageBehavior = false;
             this.logList.View = System.Windows.Forms.View.Details;
@@ -1003,7 +1008,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1370, 501);
+            this.ClientSize = new System.Drawing.Size(1370, 665);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
@@ -1031,6 +1036,7 @@
             this.splitContainer4.ResumeLayout(false);
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel2.ResumeLayout(false);
+            this.splitContainer5.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
             this.splitContainer5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridRoles)).EndInit();
