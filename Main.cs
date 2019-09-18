@@ -1080,5 +1080,13 @@ namespace LoginManager
         {
             Process.Start(logFilename);
         }
+
+        private void TextBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                ReloadPeople(txtSearch.Text);
+            }
+        }
     }
 }
