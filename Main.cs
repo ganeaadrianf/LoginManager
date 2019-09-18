@@ -364,10 +364,11 @@ namespace LoginManager
             dt.Rows.Add(emptyRow);
 
 
-            var dv = new DataView(dt, "", "Denumire", DataViewRowState.CurrentRows);
+           
 
             for (int i = 0; i < 7; i++)
             {
+                var dv = new DataView(dt, "", "Denumire", DataViewRowState.CurrentRows);
                 var combo = (ComboBox)(this.Controls.Find(string.Format("cmbC{0}", i + 1), true)[0]);
                 combo.DataSource = dv;
                 combo.DisplayMember = "Denumire";
