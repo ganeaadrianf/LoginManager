@@ -341,6 +341,10 @@ namespace LoginManager
             {
                 // Background work
                 LoadCombobox();
+            }).ContinueWith((t)=> {
+                //GridPeople_RowEnter("force click", new DataGridViewCellEventArgs(0, 0));
+                WriteLog("Listele de unitati au fost incarcate!",5);
+                pictureBox1.Visible = false;
             });
 
             
@@ -1000,6 +1004,9 @@ namespace LoginManager
 
             switch (type)
             {
+                case 5:
+                    li.ForeColor = Color.Purple;
+                    break;
                 case 4:
                     li.ForeColor = Color.Orange;
                     break;
