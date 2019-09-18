@@ -12,6 +12,8 @@ using System.Data.SqlClient;
 using LoginManager.Classes;
 using PasswordUtility.PasswordGenerator;
 using Microsoft.SqlServer.Management.Smo;
+using System.IO;
+using System.Diagnostics;
 
 namespace LoginManager
 {
@@ -48,6 +50,8 @@ namespace LoginManager
         private string dropRoleMember = string.Empty;
         private string alterUserWithLogin = string.Empty;
 
+        private static string logFileFormat = "loginManager_{0}.txt";
+        private string logFilename = String.Format(logFileFormat, System.DateTime.Now.ToString("dd.MM.yyyy HH_mm_ss"));
 
 
         private Dictionary<string, string> sqlServerConnectionStrings = new Dictionary<string, string>();
@@ -333,7 +337,13 @@ namespace LoginManager
         {
             //for (int i = 0; i < depHierarchyQueries.Count; i++)
             //{
-            LoadCombobox();
+            Task task = Task.Factory.StartNew(() =>
+            {
+                // Background work
+                LoadCombobox();
+            });
+
+            
             //}
             LoadAplicatieCombobox();
             LoadTipAccesCombobox();
@@ -342,9 +352,10 @@ namespace LoginManager
         {
             DataTable dt;
             var queryComboLists = string.Format(depHierarchyQuery);
-
+            WriteLog(queryComboLists, 2);
             using (var connection = new SqlConnection(adminAplicConnectionString))
             {
+                
                 var command = new SqlCommand(queryComboLists, connection);
                 connection.Open();
                 using (var reader = command.ExecuteReader())
@@ -1011,6 +1022,15 @@ namespace LoginManager
             li.Text = message;
 
             logList.Items.Insert(0, li);
+
+            try
+            {
+                File.AppendAllText(logFilename, string.Format("{1} - {0}\r\n\r\n",message, System.DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")));
+            }
+            catch (Exception xcp)
+            {
+                MessageBox.Show("Nu s-a putut salva informatia in fisierul de output: " + logFilename+" - "+xcp.Message);
+            }
         }
 
         private void BtnTestCredential_Click(object sender, EventArgs e)
@@ -1049,6 +1069,9 @@ namespace LoginManager
             ReloadPeople(txtSearch.Text);
         }
 
-
+        private void BtnViewLog_Click(object sender, EventArgs e)
+        {
+            Process.Start(logFilename);
+        }
     }
 }

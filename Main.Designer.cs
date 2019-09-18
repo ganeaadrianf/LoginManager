@@ -31,6 +31,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
@@ -95,14 +103,7 @@
             this.cmbC4 = new System.Windows.Forms.ComboBox();
             this.logList = new System.Windows.Forms.ListView();
             this.Log = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
+            this.btnViewLog = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -181,6 +182,78 @@
             this.splitContainer2.Size = new System.Drawing.Size(858, 501);
             this.splitContainer2.SplitterDistance = 121;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(9, 15);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(92, 13);
+            this.label18.TabIndex = 17;
+            this.label18.Text = "CNP, login, nume:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(273, 41);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(20, 13);
+            this.label17.TabIndex = 16;
+            this.label17.Text = "C3";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(9, 69);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(20, 13);
+            this.label16.TabIndex = 15;
+            this.label16.Text = "C5";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(141, 67);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(20, 13);
+            this.label15.TabIndex = 14;
+            this.label15.Text = "C6";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(405, 42);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(20, 13);
+            this.label14.TabIndex = 13;
+            this.label14.Text = "C4";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(141, 41);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(20, 13);
+            this.label13.TabIndex = 12;
+            this.label13.Text = "C2";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(273, 67);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(20, 13);
+            this.label12.TabIndex = 11;
+            this.label12.Text = "C7";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 41);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(20, 13);
+            this.label11.TabIndex = 10;
+            this.label11.Text = "C1";
             // 
             // btnSearch
             // 
@@ -616,6 +689,7 @@
             // 
             // splitContainer6.Panel1
             // 
+            this.splitContainer6.Panel1.Controls.Add(this.btnViewLog);
             this.splitContainer6.Panel1.Controls.Add(this.lblCNP);
             this.splitContainer6.Panel1.Controls.Add(this.btnDelete);
             this.splitContainer6.Panel1.Controls.Add(this.txtCNP);
@@ -646,7 +720,7 @@
             // 
             this.splitContainer6.Panel2.Controls.Add(this.logList);
             this.splitContainer6.Size = new System.Drawing.Size(508, 501);
-            this.splitContainer6.SplitterDistance = 305;
+            this.splitContainer6.SplitterDistance = 331;
             this.splitContainer6.TabIndex = 31;
             // 
             // lblCNP
@@ -892,7 +966,7 @@
             this.logList.LabelWrap = false;
             this.logList.Location = new System.Drawing.Point(0, 0);
             this.logList.Name = "logList";
-            this.logList.Size = new System.Drawing.Size(508, 192);
+            this.logList.Size = new System.Drawing.Size(508, 166);
             this.logList.TabIndex = 0;
             this.logList.UseCompatibleStateImageBehavior = false;
             this.logList.View = System.Windows.Forms.View.Details;
@@ -902,77 +976,15 @@
             this.Log.Text = "Log";
             this.Log.Width = 1200;
             // 
-            // label11
+            // btnViewLog
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(9, 41);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(20, 13);
-            this.label11.TabIndex = 10;
-            this.label11.Text = "C1";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(273, 67);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(20, 13);
-            this.label12.TabIndex = 11;
-            this.label12.Text = "C7";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(141, 41);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(20, 13);
-            this.label13.TabIndex = 12;
-            this.label13.Text = "C2";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(405, 42);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(20, 13);
-            this.label14.TabIndex = 13;
-            this.label14.Text = "C4";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(141, 67);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(20, 13);
-            this.label15.TabIndex = 14;
-            this.label15.Text = "C6";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(9, 69);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(20, 13);
-            this.label16.TabIndex = 15;
-            this.label16.Text = "C5";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(273, 41);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(20, 13);
-            this.label17.TabIndex = 16;
-            this.label17.Text = "C3";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(9, 15);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(92, 13);
-            this.label18.TabIndex = 17;
-            this.label18.Text = "CNP, login, nume:";
+            this.btnViewLog.Location = new System.Drawing.Point(8, 303);
+            this.btnViewLog.Name = "btnViewLog";
+            this.btnViewLog.Size = new System.Drawing.Size(125, 23);
+            this.btnViewLog.TabIndex = 18;
+            this.btnViewLog.Text = "Vizualizare fisier log";
+            this.btnViewLog.UseVisualStyleBackColor = true;
+            this.btnViewLog.Click += new System.EventHandler(this.BtnViewLog_Click);
             // 
             // frmMain
             // 
@@ -1094,6 +1106,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Button btnViewLog;
     }
 }
 
