@@ -28,7 +28,7 @@ namespace LoginManager
         private string tipAccessList = string.Empty;
 
         private const int maxNumberOfServers = 10;
-        private const int depHierarchyCount = 7;
+        private const int depCount = 7;
 
         private List<string> depHierarchyQueries = new List<string>();
 
@@ -38,6 +38,7 @@ namespace LoginManager
         private string insertUserRole = string.Empty;
         private string deleteUser = string.Empty;
         private string deleteUserRole = string.Empty;
+        private string revokeUserRole = string.Empty;
         private string checkIfUserExists = string.Empty;
         private string checkIfLoginExists = string.Empty;
         private string checkIfUserMappedToRole = string.Empty;
@@ -85,6 +86,7 @@ namespace LoginManager
                 insertUserRole = ConfigurationManager.AppSettings["InsertUserRole"];
                 deleteUser = ConfigurationManager.AppSettings["DeleteUser"];
                 deleteUserRole = ConfigurationManager.AppSettings["DeleteUserRole"];
+                revokeUserRole = ConfigurationManager.AppSettings["RevokeUserRole"];
                 checkIfUserExists = ConfigurationManager.AppSettings["CheckIfUserExists"];
                 checkIfLoginExists = ConfigurationManager.AppSettings["CheckIfLoginExists"];
                 checkIfUserMappedToRole = ConfigurationManager.AppSettings["CheckIfUserMappedToRole"];
@@ -306,7 +308,7 @@ namespace LoginManager
         private void CheckDatabaseRole(string connString, string dbRole)
         {
             var qCheckDBRole = string.Format(checkIfUserMappedToRole, txtLogin.Text, dbRole);
-
+            WriteLog(qCheckDBRole, 1);
             using (var connection = new SqlConnection(connString))
             {
                 var command = new SqlCommand(qCheckDBRole, connection);
@@ -507,31 +509,36 @@ namespace LoginManager
                 bool userExists = false;
                 var queryUpdateUser = string.Format(updateUser,
                                                     txtNume.Text,
-                                                    txtPrenume.Text,
+                                                    txtTelContact.Text,
                                                     txtCNP.Text,
                                                     txtLogin.Text,
-                                                    cmbC1.SelectedValue == null ? -1 : cmbC1.SelectedValue,
-                                                    cmbC2.SelectedValue == null ? -1 : cmbC2.SelectedValue,
-                                                    cmbC3.SelectedValue == null ? -1 : cmbC3.SelectedValue,
-                                                    cmbC4.SelectedValue == null ? -1 : cmbC4.SelectedValue,
-                                                    cmbC5.SelectedValue == null ? -1 : cmbC5.SelectedValue,
-                                                    cmbC6.SelectedValue == null ? -1 : cmbC6.SelectedValue,
-                                                    cmbC7.SelectedValue == null ? -1 : cmbC7.SelectedValue
+                                                    txtc1.Text == string.Empty ? "0" :  txtc1.Text,
+                                                    txtc2.Text == string.Empty ? "0" : txtc2.Text,
+                                                    txtc3.Text == string.Empty ? "0" : txtc3.Text,
+                                                    txtc4.Text == string.Empty ? "0" : txtc4.Text,
+                                                    txtc5.Text == string.Empty ? "0" : txtc5.Text,
+                                                    txtc6.Text == string.Empty ? "0" : txtc6.Text,
+                                                    txtc7.Text == string.Empty ? "0" : txtc7.Text,
+                                                    txtEmail.Text,
+                                                    txtUnitatea.Text
                                                     );
 
 
 
                 var qInsertUser = string.Format(insertUser, txtNume.Text,
-                                                    txtPrenume.Text,
+                                                    txtTelContact.Text,
                                                     txtCNP.Text,
                                                     txtLogin.Text,
-                                                    cmbC1.SelectedValue,
-                                                    cmbC2.SelectedValue,
-                                                    cmbC3.SelectedValue,
-                                                    cmbC4.SelectedValue,
-                                                    cmbC5.SelectedValue,
-                                                    cmbC6.SelectedValue,
-                                                    cmbC7.SelectedValue);
+                                                    txtc1.Text,
+                                                    txtc2.Text,
+                                                    txtc3.Text,
+                                                    txtc4.Text,
+                                                    txtc5.Text,
+                                                    txtc6.Text,
+                                                    txtc7.Text,
+                                                    txtEmail.Text,
+                                                    txtUnitatea.Text
+                                                    );
                 var qCheckUser = string.Format(checkIfUserExists, txtLogin.Text);
 
                 using (var connection = new SqlConnection(adminAplicConnectionString))
@@ -613,25 +620,27 @@ namespace LoginManager
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
                 //gridPeople.CurrentRow.Selected = true;
-                txtCNP.Text = gridPeople.Rows[e.RowIndex].Cells["CNP"].FormattedValue.ToString();
-                txtNume.Text = gridPeople.Rows[e.RowIndex].Cells["Nume"].FormattedValue.ToString();
-                txtPrenume.Text = gridPeople.Rows[e.RowIndex].Cells["Prenume"].FormattedValue.ToString();
-                txtLogin.Text = gridPeople.Rows[e.RowIndex].Cells["Login"].FormattedValue.ToString();
+                txtCNP.Text = gridPeople.Rows[e.RowIndex].Cells["cnp"].FormattedValue.ToString();
+                txtNume.Text = gridPeople.Rows[e.RowIndex].Cells["nume_prenume"].FormattedValue.ToString();
+                txtTelContact.Text = gridPeople.Rows[e.RowIndex].Cells["tel_contact"].FormattedValue.ToString();
+                txtLogin.Text = gridPeople.Rows[e.RowIndex].Cells["nume_user"].FormattedValue.ToString();
+                txtEmail.Text = gridPeople.Rows[e.RowIndex].Cells["mail_intranet"].FormattedValue.ToString();
+                txtUnitatea.Text = gridPeople.Rows[e.RowIndex].Cells["unitatea"].FormattedValue.ToString();
                 try
                 {
-                    for (int i = 1; i <= depHierarchyCount; i++)
+                    for (int i = 1; i <= depCount; i++)
                     {
-                        var combo = (ComboBox)(this.Controls.Find(string.Format("cmbC{0}", i), true)[0]);
+                        var text = (TextBox)(this.Controls.Find(string.Format("txtc{0}", i), true)[0]);
                         if (!string.IsNullOrEmpty(gridPeople.Rows[e.RowIndex].Cells[string.Format("C{0}", i)].FormattedValue.ToString()))
-                            combo.SelectedValue = gridPeople.Rows[e.RowIndex].Cells[string.Format("C{0}", i)].FormattedValue.ToString();
+                            text.Text = gridPeople.Rows[e.RowIndex].Cells[string.Format("c{0}", i)].FormattedValue.ToString();
                         else
-                            combo.SelectedValue = -1;
+                            text.Text = "0";
 
                     }
 
                 }
                 catch (Exception) { }
-                ReloadRoles(gridPeople.Rows[e.RowIndex].Cells["Login"].FormattedValue.ToString());
+                ReloadRoles(gridPeople.Rows[e.RowIndex].Cells["nume_user"].FormattedValue.ToString());
 
             }
 
@@ -645,16 +654,15 @@ namespace LoginManager
             WriteLog("Clear fields!");
             txtCNP.Text = string.Empty;
             txtNume.Text = string.Empty;
-            txtPrenume.Text = string.Empty;
+            txtTelContact.Text = string.Empty;
             txtLogin.Text = string.Empty;
-            cmbC1.SelectedValue = -1;
-            cmbC2.SelectedValue = -1;
-            cmbC3.SelectedValue = -1;
-            cmbC4.SelectedValue = -1;
-            cmbC5.SelectedValue = -1;
-            cmbC6.SelectedValue = -1;
-            cmbC7.SelectedValue = -1;
-
+            txtc1.Text = "0";
+            txtc2.Text = "0";
+            txtc3.Text = "0";
+            txtc4.Text = "0";
+            txtc5.Text = "0";
+            txtc6.Text = "0";
+            txtc7.Text = "0";
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
@@ -725,8 +733,8 @@ namespace LoginManager
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
 
-                lblAplicatie.Text = gridRoles.Rows[e.RowIndex].Cells["Aplicatie"].FormattedValue.ToString();
-                lblTipAcces.Text = gridRoles.Rows[e.RowIndex].Cells["TipAcces"].FormattedValue.ToString();
+                lblAplicatie.Text = gridRoles.Rows[e.RowIndex].Cells["aplicatia"].FormattedValue.ToString();
+                lblTipAcces.Text = gridRoles.Rows[e.RowIndex].Cells["drept_solicitat"].FormattedValue.ToString();
                 btnDeleteRole.Visible = true;
                 var app = apps.Where(a => a.AppName == lblAplicatie.Text).First();
                 lblServerInfo.Text = "      " + app.ConnectionString;
@@ -1086,6 +1094,34 @@ namespace LoginManager
             if (e.KeyCode == Keys.Enter)
             {
                 ReloadPeople(txtSearch.Text);
+            }
+        }
+
+
+
+
+        private void BtnRevokeRole_Click(object sender, EventArgs e)
+        {
+            var qRevokeRole = string.Format(revokeUserRole, txtLogin.Text, lblAplicatie.Text, lblTipAcces.Text);
+            if (MessageBox.Show(string.Format("Rolul va fi marcat ca revocat!\nPentru a sterge si permisiunile asociate, folositi optiunile corespunzatoare!\nSigur doriti sa continuati?\n\n{0}", qRevokeRole), "Revoke Role?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+                WriteLog("Stergere rol din admin aplic!");
+                WriteLog(qRevokeRole, 1);
+                using (var connection = new SqlConnection(adminAplicConnectionString))
+                {
+                    var command = new SqlCommand(qRevokeRole, connection);
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        ReloadRoles(txtLogin.Text);
+                        WriteLog("OK!", 2);
+                    }
+                    catch (Exception xcp)
+                    {
+                        MessageBox.Show(string.Format("Comanda e esuat!\n{0}\n{1}", xcp.Message, xcp.StackTrace), "Eror!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
         }
     }
