@@ -60,6 +60,7 @@
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.gridRoles = new System.Windows.Forms.DataGridView();
+            this.btnRevokeRole = new System.Windows.Forms.Button();
             this.btnAddRole = new System.Windows.Forms.Button();
             this.cmbTipAcces = new System.Windows.Forms.ComboBox();
             this.cmbAplicatie = new System.Windows.Forms.ComboBox();
@@ -116,7 +117,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.logList = new System.Windows.Forms.ListView();
             this.Log = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnRevokeRole = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -527,6 +527,20 @@
             this.gridRoles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_CellClick);
             this.gridRoles.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_RowEnter);
             // 
+            // btnRevokeRole
+            // 
+            this.btnRevokeRole.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRevokeRole.Image = ((System.Drawing.Image)(resources.GetObject("btnRevokeRole.Image")));
+            this.btnRevokeRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRevokeRole.Location = new System.Drawing.Point(8, 64);
+            this.btnRevokeRole.Name = "btnRevokeRole";
+            this.btnRevokeRole.Size = new System.Drawing.Size(133, 36);
+            this.btnRevokeRole.TabIndex = 6;
+            this.btnRevokeRole.Text = "Revoca dreptul";
+            this.btnRevokeRole.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRevokeRole.UseVisualStyleBackColor = true;
+            this.btnRevokeRole.Click += new System.EventHandler(this.BtnRevokeRole_Click);
+            // 
             // btnAddRole
             // 
             this.btnAddRole.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -864,7 +878,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(154, 22);
             this.txtEmail.TabIndex = 42;
-            //
+            // 
             // label20
             // 
             this.label20.AutoSize = true;
@@ -1171,20 +1185,6 @@
             // 
             this.Log.Text = "Log";
             this.Log.Width = 1200;
-            // 
-            // btnRevokeRole
-            // 
-            this.btnRevokeRole.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRevokeRole.Image = ((System.Drawing.Image)(resources.GetObject("btnRevokeRole.Image")));
-            this.btnRevokeRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRevokeRole.Location = new System.Drawing.Point(8, 64);
-            this.btnRevokeRole.Name = "btnRevokeRole";
-            this.btnRevokeRole.Size = new System.Drawing.Size(133, 36);
-            this.btnRevokeRole.TabIndex = 6;
-            this.btnRevokeRole.Text = "Revoca dreptul";
-            this.btnRevokeRole.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnRevokeRole.UseVisualStyleBackColor = true;
-            this.btnRevokeRole.Click += new System.EventHandler(this.BtnRevokeRole_Click);
             // 
             // frmMain
             // 

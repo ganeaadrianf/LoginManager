@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
 using System.Data.SqlClient;
 using LoginManager.Classes;
-using PasswordUtility.PasswordGenerator;
-using Microsoft.SqlServer.Management.Smo;
 using System.IO;
 using System.Diagnostics;
+using System.Threading;
 
 namespace LoginManager
 {
@@ -76,6 +73,7 @@ namespace LoginManager
                 lblTipAcces.Text = string.Empty;
                 lblAplicatie.Text = string.Empty;
                 btnDeleteRole.Visible = false;
+                btnRevokeRole.Visible = false;
                 WriteLog("Loading config settings...");
                 LoadConnectionStrings();
                 adminAplicConnectionString = ConfigurationManager.ConnectionStrings["AdminAplicConnectionString"].ConnectionString;
@@ -103,21 +101,9 @@ namespace LoginManager
                 aplicatieList = ConfigurationManager.AppSettings["AplicatieList"];
                 tipAccessList = ConfigurationManager.AppSettings["TipAccesList"];
 
-                //depHierarchyQueries = new List<string>();
-                //for (int i = 1; i <= depHierarchyCount; i++)
-                //{
-                //    try
-                //    {
-                //        depHierarchyQueries.Add(ConfigurationManager.AppSettings[String.Format("C{0}List", i)]);
-                //    }
-                //    catch (Exception)
-                //    { //do nothing
-                //    }
-                //}
-                depHierarchyQuery=ConfigurationManager.AppSettings[String.Format("CList")];
-                WriteLog("Loading comboboxes...");
-                LoadComboboxes();
-                WriteLog("Loading people grid...");
+
+                LoadAplicatieCombobox();
+                LoadTipAccesCombobox();
                 ReloadPeople();
             }
             catch (Exception xcp)
@@ -230,6 +216,7 @@ namespace LoginManager
                     gridRoles.AutoGenerateColumns = true;
                     gridRoles.DataSource = dt;
                     btnDeleteRole.Visible = dt.Rows.Count > 0;
+                    btnRevokeRole.Visible = dt.Rows.Count>0;
                     if (dt.Rows.Count == 0)
                     {
                         lblAplicatie.Text = string.Empty;
@@ -275,128 +262,87 @@ namespace LoginManager
         private void CheckSQLLogin(string connString)
         {
             var qCheckLogin = string.Format(checkIfLoginExists, txtLogin.Text);
-
-            using (var connection = new SqlConnection(connString))
+            try
             {
-                var command = new SqlCommand(qCheckLogin, connection);
-                connection.Open();
-                using (var reader = command.ExecuteReader())
+                using (var connection = new SqlConnection(connString))
                 {
-                    if (reader.Read())
+                    var command = new SqlCommand(qCheckLogin, connection);
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
                     {
-                        lblLoginInfo.ForeColor = Color.Black;
-                        lblLoginInfo.Text = "       Loginul exista pe serverul de mai sus.";
-                        btnResetPass.Visible = true;
-                        btnCreateLogin.Visible = false;
-                        btnDeleteLogin.Visible = true;
-                        //btnTestCredential.Visible = true;
-                    }
-                    else
-                    {
-                        lblLoginInfo.ForeColor = Color.Red;
-                        lblLoginInfo.Text = "       Nu exista un login cu acest nume!!";
-                        btnResetPass.Visible = false;
-                        btnCreateLogin.Visible = true;
-                        btnDeleteLogin.Visible = false;
-                        btnTestCredential.Visible = false;
+                        if (reader.Read())
+                        {
+                            lblLoginInfo.ForeColor = Color.Black;
+                            lblLoginInfo.Text = "       Loginul exista pe serverul de mai sus.";
+                            btnResetPass.Visible = true;
+                            btnCreateLogin.Visible = false;
+                            btnDeleteLogin.Visible = true;
+                            //btnTestCredential.Visible = true;
+                        }
+                        else
+                        {
+                            lblLoginInfo.ForeColor = Color.Red;
+                            lblLoginInfo.Text = "       Nu exista un login cu acest nume!!";
+                            btnResetPass.Visible = false;
+                            btnCreateLogin.Visible = true;
+                            btnDeleteLogin.Visible = false;
+                            btnTestCredential.Visible = false;
+                        }
                     }
                 }
             }
+            catch (Exception xcp) {
+                WriteLog(xcp.Message, 3);
+            }
         }
+
 
 
         private void CheckDatabaseRole(string connString, string dbRole)
         {
+
+
+
+
             var qCheckDBRole = string.Format(checkIfUserMappedToRole, txtLogin.Text, dbRole);
             WriteLog(qCheckDBRole, 1);
-            using (var connection = new SqlConnection(connString))
+
+            
+            try
             {
-                var command = new SqlCommand(qCheckDBRole, connection);
-                connection.Open();
-                using (var reader = command.ExecuteReader())
+                using (var connection = new SqlConnection(connString))
                 {
-                    if (reader.Read())
+                    var command = new SqlCommand(qCheckDBRole, connection);
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
                     {
-                        lblUserInRole.ForeColor = Color.Black;
-                        lblUserInRole.Text = "       Userul este in rolul: " + dbRole;
-                        btnAddLoginToRole.Visible = false;
-                        btnDropRole.Visible = true;
-                    }
-                    else
-                    {
-                        lblUserInRole.ForeColor = Color.Red;
-                        lblUserInRole.Text = "       Userul nu are rolul: " + dbRole;
-                        btnAddLoginToRole.Visible = true;
-                        btnDropRole.Visible = false;
+                        if (reader.Read())
+                        {
+                            lblUserInRole.ForeColor = Color.Black;
+                            lblUserInRole.Text = "       Userul este in rolul: " + dbRole;
+                            btnAddLoginToRole.Visible = false;
+                            btnDropRole.Visible = true;
+                        }
+                        else
+                        {
+                            lblUserInRole.ForeColor = Color.Red;
+                            lblUserInRole.Text = "       Userul nu are rolul: " + dbRole;
+                            btnAddLoginToRole.Visible = true;
+                            btnDropRole.Visible = false;
+                        }
                     }
                 }
             }
-        }
-
-
-
-        private void LoadComboboxes()
-        {
-            //for (int i = 0; i < depHierarchyQueries.Count; i++)
-            //{
-            Task task = Task.Factory.StartNew(() =>
+            catch (Exception xcp)
             {
-                // Background work
-                LoadCombobox();
-            }).ContinueWith((t)=> {
-                //GridPeople_RowEnter("force click", new DataGridViewCellEventArgs(0, 0));
-                WriteLog("Listele de unitati au fost incarcate!",5);
-                pictureBox1.Visible = false;
-            });
-
-            
-            //}
-            LoadAplicatieCombobox();
-            LoadTipAccesCombobox();
-        }
-        private void LoadCombobox()
-        {
-            DataTable dt;
-            var queryComboLists = string.Format(depHierarchyQuery);
-            WriteLog(queryComboLists, 2);
-            using (var connection = new SqlConnection(adminAplicConnectionString))
-            {
-                
-                var command = new SqlCommand(queryComboLists, connection);
-                connection.Open();
-                using (var reader = command.ExecuteReader())
-                {
-
-                    dt = new DataTable();
-
-                    dt.Load(reader);
-
-
-                }
-            }
-           
-            var emptyRow = dt.NewRow();
-            emptyRow["Valoare"] = -1;
-            emptyRow["Denumire"] = string.Empty;
-            dt.Rows.Add(emptyRow);
-
-
-           
-
-            for (int i = 0; i < 7; i++)
-            {
-                var dv = new DataView(dt, "", "Denumire", DataViewRowState.CurrentRows);
-                var combo = (ComboBox)(this.Controls.Find(string.Format("cmbC{0}", i + 1), true)[0]);
-                combo.DataSource = dv;
-                combo.DisplayMember = "Denumire";
-                combo.ValueMember = "Valoare";
-                //combo.Refresh();
+                WriteLog(xcp.Message, 3);
             }
 
 
-
-            
         }
+
+
+
 
 
         private void LoadAplicatieCombobox()
@@ -736,6 +682,7 @@ namespace LoginManager
                 lblAplicatie.Text = gridRoles.Rows[e.RowIndex].Cells["aplicatia"].FormattedValue.ToString();
                 lblTipAcces.Text = gridRoles.Rows[e.RowIndex].Cells["drept_solicitat"].FormattedValue.ToString();
                 btnDeleteRole.Visible = true;
+                btnRevokeRole.Visible = true;
                 var app = apps.Where(a => a.AppName == lblAplicatie.Text).First();
                 lblServerInfo.Text = "      " + app.ConnectionString;
 
@@ -747,6 +694,7 @@ namespace LoginManager
             else
             {
                 btnDeleteRole.Visible = true;
+                btnRevokeRole.Visible = true;
                 lblServerInfo.Text = "";
             }
 
