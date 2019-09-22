@@ -229,6 +229,7 @@ namespace LoginManager
                         lblMinChars.Visible = false;
                         btnResetPass.Visible = false;
                         btnGeneratePassword.Visible = false;
+                        btnAddLoginToRole.Visible = false;
                         txtMinLength.Visible = false;
                         txtPassword.Visible = false;
                         lblUserInRole.Visible = false;
@@ -602,13 +603,14 @@ namespace LoginManager
             txtNume.Text = string.Empty;
             txtTelContact.Text = string.Empty;
             txtLogin.Text = string.Empty;
-            txtc1.Text = "0";
-            txtc2.Text = "0";
-            txtc3.Text = "0";
-            txtc4.Text = "0";
-            txtc5.Text = "0";
-            txtc6.Text = "0";
-            txtc7.Text = "0";
+            txtEmail.Text = string.Empty;
+            //txtc1.Text = "0";
+            //txtc2.Text = "0";
+            //txtc3.Text = "0";
+            //txtc4.Text = "0";
+            //txtc5.Text = "0";
+            //txtc6.Text = "0";
+            //txtc7.Text = "0";
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
