@@ -51,6 +51,8 @@ namespace LoginManager
         private static string logFileFormat = "loginManager_{0}.txt";
         private string logFilename = String.Format(logFileFormat, System.DateTime.Now.ToString("dd.MM.yyyy HH_mm_ss"));
 
+        private bool suppressMessages = false;
+
 
         private Dictionary<string, string> sqlServerConnectionStrings = new Dictionary<string, string>();
 
@@ -91,6 +93,7 @@ namespace LoginManager
                 createLogin = ConfigurationManager.AppSettings["CreateLogin"];
                 resetLogin = ConfigurationManager.AppSettings["ResetLogin"];
                 dropLogin = ConfigurationManager.AppSettings["DropLogin"];
+                
 
                 createDBUserForLogin = ConfigurationManager.AppSettings["CreateDBUserForLogin"];
                 addRoleMember = ConfigurationManager.AppSettings["AddRoleMember"];
@@ -100,7 +103,9 @@ namespace LoginManager
 
                 aplicatieList = ConfigurationManager.AppSettings["AplicatieList"];
                 tipAccessList = ConfigurationManager.AppSettings["TipAccesList"];
-
+                int result = 0;
+                Int32.TryParse(ConfigurationManager.AppSettings["SuppressMessages"],out result);
+                suppressMessages = result != 0;
 
                 LoadAplicatieCombobox();
                 LoadTipAccesCombobox();
@@ -506,7 +511,7 @@ namespace LoginManager
                 {
                     WriteLog("User exists!");
                     WriteLog(queryUpdateUser, 1);
-                    if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", queryUpdateUser), "USER EXISTENT", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                    if (suppressMessages || MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", queryUpdateUser), "USER EXISTENT", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                     {
                         using (var connection = new SqlConnection(adminAplicConnectionString))
                         {
@@ -531,7 +536,7 @@ namespace LoginManager
                 {
                     WriteLog("User not found!");
                     WriteLog(qInsertUser);
-                    if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUser), "USER NOU", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                    if (suppressMessages || MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUser), "USER NOU", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                     {
 
                         using (var connection = new SqlConnection(adminAplicConnectionString))
@@ -617,7 +622,7 @@ namespace LoginManager
         {
 
             var qDeleteUser = string.Format(deleteUser, txtLogin.Text);
-            if (MessageBox.Show(string.Format("Userul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUser), "Delete user?", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Userul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUser), "Delete user?", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Deleting user: " + qDeleteUser, 1);
                 using (var connection = new SqlConnection(adminAplicConnectionString))
@@ -645,7 +650,7 @@ namespace LoginManager
             //return;
 
             var qDeleteUserRole = string.Format(deleteUserRole, txtLogin.Text, lblAplicatie.Text, lblTipAcces.Text);
-            if (MessageBox.Show(string.Format("Rolul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUserRole), "Delete Role?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Rolul va fi sters ireversibil!\nSigur doriti sa continuati?\n\n{0}", qDeleteUserRole), "Delete Role?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Stergere rol din admin aplic!");
                 WriteLog(qDeleteUserRole, 1);
@@ -717,7 +722,7 @@ namespace LoginManager
                                         cmbAplicatie.Text,
                                         cmbTipAcces.Text);
                 WriteLog(qInsertUserRole, 1);
-                if (MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUserRole), "Adaugare rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                if (suppressMessages || MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUserRole), "Adaugare rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                 {
 
                     using (var connection = new SqlConnection(adminAplicConnectionString))
@@ -755,7 +760,7 @@ namespace LoginManager
         private void CreateOrModifyLogin(string qCreateLogin)
         {
 
-            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nNotati parola inainte de a continu!\nDoriti sa continuati?\n\n{0}", qCreateLogin), "Creare login", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nNotati parola inainte de a continu!\nDoriti sa continuati?\n\n{0}", qCreateLogin), "Creare login", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Modificare login");
                 WriteLog(qCreateLogin, 1);
@@ -804,7 +809,7 @@ namespace LoginManager
         private void BtnDeleteLogin_Click(object sender, EventArgs e)
         {
             var qDropLogin = string.Format(dropLogin, txtLogin.Text);
-            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nLoginul va fi sters ireversibil!\nDoriti sa continuati?\n\n{0}", qDropLogin), "Steregere login", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nLoginul va fi sters ireversibil!\nDoriti sa continuati?\n\n{0}", qDropLogin), "Steregere login", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Stergere login sql...");
                 WriteLog(qDropLogin, 1);
@@ -835,7 +840,7 @@ namespace LoginManager
         private void BtnAddLoginToRole_Click(object sender, EventArgs e)
         {
             var qCreateDbUser = string.Format(createDBUserForLogin, txtLogin.Text);
-            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul se va crea in baza de date!\nDoriti sa continuati?\n\n{0}", qCreateDbUser), "Creare user", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul se va crea in baza de date!\nDoriti sa continuati?\n\n{0}", qCreateDbUser), "Creare user", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Creare user db...");
                 WriteLog(qCreateDbUser, 1);
@@ -868,7 +873,7 @@ namespace LoginManager
         private void AlterUserWithLoginIfExists()
         {
             var qAlterUSer = string.Format(alterUserWithLogin, txtLogin.Text);
-            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul se va crea in baza de date!\nDoriti sa continuati?\n\n{0}", qAlterUSer), "alter user", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul se va crea in baza de date!\nDoriti sa continuati?\n\n{0}", qAlterUSer), "alter user", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Creare user db...");
                 WriteLog(qAlterUSer, 1);
@@ -896,7 +901,7 @@ namespace LoginManager
         private void AddDBRoleMember()
         {
             var qAddRoleMember = string.Format(addRoleMember, access.Where(a => a.Display == lblTipAcces.Text).First().Value, txtLogin.Text);
-            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi adaugat in rol!\nDoriti sa continuati?\n\n{0}", qAddRoleMember), "Adaugare user in rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi adaugat in rol!\nDoriti sa continuati?\n\n{0}", qAddRoleMember), "Adaugare user in rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Creare role db...");
                 WriteLog(qAddRoleMember, 1);
@@ -928,7 +933,7 @@ namespace LoginManager
         private void BtnDropRole_Click(object sender, EventArgs e)
         {
             var qDropRoleMember = string.Format(dropRoleMember, access.Where(a => a.Display == lblTipAcces.Text).First().Value, txtLogin.Text);
-            if (MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi sters din rol!\nDoriti sa continuati?\n\n{0}", qDropRoleMember), "Stergere user din rol", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi sters din rol!\nDoriti sa continuati?\n\n{0}", qDropRoleMember), "Stergere user din rol", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Stergere rol db...");
                 WriteLog(qDropRoleMember, 1);
@@ -1053,7 +1058,7 @@ namespace LoginManager
         private void BtnRevokeRole_Click(object sender, EventArgs e)
         {
             var qRevokeRole = string.Format(revokeUserRole, txtLogin.Text, lblAplicatie.Text, lblTipAcces.Text);
-            if (MessageBox.Show(string.Format("Rolul va fi marcat ca revocat!\nPentru a sterge si permisiunile asociate, folositi optiunile corespunzatoare!\nSigur doriti sa continuati?\n\n{0}", qRevokeRole), "Revoke Role?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Rolul va fi marcat ca revocat!\nPentru a sterge si permisiunile asociate, folositi optiunile corespunzatoare!\nSigur doriti sa continuati?\n\n{0}", qRevokeRole), "Revoke Role?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Stergere rol din admin aplic!");
                 WriteLog(qRevokeRole, 1);
