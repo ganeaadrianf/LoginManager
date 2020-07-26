@@ -18,6 +18,7 @@ namespace LoginManager
     {
         private string queryUsers = string.Empty;
 
+        private string queryDepartamente = string.Empty;
         private string queryUserRoles = string.Empty;
         private string adminAplicConnectionString = string.Empty;
         private string aplicatieList = string.Empty;
@@ -58,6 +59,8 @@ namespace LoginManager
         private List<Classes.DatabaseRole> access = new List<Classes.DatabaseRole>();
 
 
+        DataTable umTable = new DataTable();
+
         public frmMain()
 
         {
@@ -78,6 +81,7 @@ namespace LoginManager
                 LoadConnectionStrings();
                 adminAplicConnectionString = ConfigurationManager.ConnectionStrings["AdminAplicConnectionString"].ConnectionString;
                 queryUsers = ConfigurationManager.AppSettings["QueryUsers"];
+                queryDepartamente = ConfigurationManager.AppSettings["QueryCList"];
                 queryUserRoles = ConfigurationManager.AppSettings["QueryUserRoles"];
                 updateUser = ConfigurationManager.AppSettings["UpdateUser"];
                 insertUser = ConfigurationManager.AppSettings["InsertUser"];
@@ -105,6 +109,7 @@ namespace LoginManager
                 LoadAplicatieCombobox();
                 LoadTipAccesCombobox();
                 ReloadPeople();
+                LoadDepartamente();
             }
             catch (Exception xcp)
             {
@@ -119,7 +124,30 @@ namespace LoginManager
                 sqlServerConnectionStrings.Add(string.Format("SQLSERVER{0}", i + 1), ConfigurationManager.ConnectionStrings[string.Format("SQLServer{0}", i + 1)].ConnectionString);
             }
         }
+        private void LoadDepartamente()
+        {
 
+            //MessageBox.Show(queryUsers);
+            WriteLog(queryDepartamente, 2);
+            using (var connection = new SqlConnection(adminAplicConnectionString))
+            {
+                var command = new SqlCommand(queryDepartamente, connection);
+
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+
+                    umTable = new DataTable();
+                    umTable.Load(reader);
+
+                    gridViewDepartamente.AutoGenerateColumns = true;
+                    gridViewDepartamente.DataSource = umTable;
+                    gridViewDepartamente.Refresh();
+                    WriteLog(string.Format("Unitati loaded"));
+
+                }
+            }
+        }
         private void ReloadPeople(string searchParam = null)
         {
             var queryUsers = string.Empty;
@@ -216,12 +244,13 @@ namespace LoginManager
                     gridRoles.AutoGenerateColumns = true;
                     gridRoles.DataSource = dt;
                     btnDeleteRole.Visible = dt.Rows.Count > 0;
-                    btnRevokeRole.Visible = dt.Rows.Count>0;
+                    btnRevokeRole.Visible = dt.Rows.Count > 0;
                     if (dt.Rows.Count == 0)
                     {
                         lblAplicatie.Text = string.Empty;
                         lblTipAcces.Text = string.Empty;
                         lblServerInfo.Text = "";
+                        lblServerInfoNoPass.Text = "";
                         lblLoginInfo.Text = "";
                         chkSpecialChars.Visible = false;
                         chkUpper.Visible = false;
@@ -292,7 +321,8 @@ namespace LoginManager
                     }
                 }
             }
-            catch (Exception xcp) {
+            catch (Exception xcp)
+            {
                 WriteLog(xcp.Message, 3);
             }
         }
@@ -308,7 +338,7 @@ namespace LoginManager
             var qCheckDBRole = string.Format(checkIfUserMappedToRole, txtLogin.Text, dbRole);
             WriteLog(qCheckDBRole, 1);
 
-            
+
             try
             {
                 using (var connection = new SqlConnection(connString))
@@ -459,7 +489,7 @@ namespace LoginManager
                                                     txtTelContact.Text,
                                                     txtCNP.Text,
                                                     txtLogin.Text,
-                                                    txtc1.Text == string.Empty ? "0" :  txtc1.Text,
+                                                    txtc1.Text == string.Empty ? "0" : txtc1.Text,
                                                     txtc2.Text == string.Empty ? "0" : txtc2.Text,
                                                     txtc3.Text == string.Empty ? "0" : txtc3.Text,
                                                     txtc4.Text == string.Empty ? "0" : txtc4.Text,
@@ -583,6 +613,8 @@ namespace LoginManager
                         else
                             text.Text = "0";
 
+
+
                     }
 
                 }
@@ -687,7 +719,15 @@ namespace LoginManager
                 btnRevokeRole.Visible = true;
                 var app = apps.Where(a => a.AppName == lblAplicatie.Text).First();
                 lblServerInfo.Text = "      " + app.ConnectionString;
-
+                try
+                {
+                    lblServerInfoNoPass.Text = "      " + app.ConnectionString.Substring(0,app.ConnectionString.ToLower().LastIndexOf("password"));
+                }
+                catch (Exception xcp) {
+                    lblServerInfoNoPass.Text = lblServerInfo.Text;
+                    WriteLog("Eroare ascundere parola: "+xcp.Message, 5);
+                }
+               
                 CheckSQLLogin(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString);
                 CheckDatabaseRole(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName), access.Where(a => a.Display == lblTipAcces.Text).First().Value);
 
@@ -698,6 +738,7 @@ namespace LoginManager
                 btnDeleteRole.Visible = true;
                 btnRevokeRole.Visible = true;
                 lblServerInfo.Text = "";
+                lblServerInfoNoPass.Text = "";
             }
 
         }
@@ -990,11 +1031,11 @@ namespace LoginManager
 
             try
             {
-                File.AppendAllText(logFilename, string.Format("{1} - {0}\r\n\r\n",message, System.DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")));
+                File.AppendAllText(logFilename, string.Format("{1} - {0}\r\n\r\n", message, System.DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")));
             }
             catch (Exception xcp)
             {
-                MessageBox.Show("Nu s-a putut salva informatia in fisierul de output: " + logFilename+" - "+xcp.Message);
+                MessageBox.Show("Nu s-a putut salva informatia in fisierul de output: " + logFilename + " - " + xcp.Message);
             }
         }
 
@@ -1073,6 +1114,67 @@ namespace LoginManager
                     }
                 }
             }
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                for (int i = 1; i <= depCount; i++)
+                {
+                    var textC = (TextBox)(this.Controls.Find(string.Format("txtc{0}", i), true)[0]);
+                    textC.Text = gridViewDepartamente.SelectedRows[0].
+                    Cells[string.Format("c{0}", i)].FormattedValue.ToString();
+
+
+
+                }
+                txtUnitatea.Text = gridViewDepartamente.SelectedRows[0].
+                        Cells["Denumire"].FormattedValue.ToString();
+
+
+            }
+            catch (Exception xcp)
+            {
+                WriteLog($"Selectati intregul rand {xcp.Message}", 3);
+            }
+
+
+        }
+
+        private void TextBox8_TextChanged(object sender, EventArgs e)
+        {
+            DataTable newSource = new DataTable();
+            foreach (DataColumn column in umTable.Columns)
+            {
+                newSource.Columns.Add(column.ColumnName,column.DataType);
+            }
+
+
+            int result = -1;
+            Int32.TryParse(textBox8.Text, out result);
+            result = result == 0 ? -1 : result;
+            var rows = umTable.Select($"Denumire LIKE '*{textBox8.Text}*'" +
+                $" or C1={result}" +
+                $" or C2={result}" +
+                $" or C3={result}" +
+                $" or C4={result}" +
+                $" or C5={result}" +
+                $" or C6={result}" +
+                $" or C7={result}"
+                     );
+            foreach (DataRow dr in rows)
+            {
+                newSource.Rows.Add(dr.ItemArray);
+            }
+            gridViewDepartamente.DataSource = newSource;
+            gridViewDepartamente.Refresh();
+
+        }
+
+        private void Label22_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
