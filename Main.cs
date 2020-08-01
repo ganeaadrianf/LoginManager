@@ -21,11 +21,11 @@ namespace LoginManager
         private string queryDepartamente = string.Empty;
         private string queryUserRoles = string.Empty;
         private string adminAplicConnectionString = string.Empty;
-        private string aplicatieList = string.Empty;
 
-        private string tipAccessList = string.Empty;
 
-        private const int maxNumberOfServers = 10;
+        
+        private string accesAplicatieList = string.Empty;
+
         private const int depCount = 7;
 
         private List<string> depHierarchyQueries = new List<string>();
@@ -51,14 +51,15 @@ namespace LoginManager
 
         private static string logFileFormat = "loginManager_{0}.txt";
         private string logFilename = String.Format(logFileFormat, System.DateTime.Now.ToString("dd.MM.yyyy HH_mm_ss"));
+        private string userCreationLog = "loginsCreated.txt";
 
         private bool suppressMessages = false;
 
 
         private Dictionary<string, string> sqlServerConnectionStrings = new Dictionary<string, string>();
 
-        public List<DatabaseApplication> apps = new List<DatabaseApplication>();
-        private List<Classes.DatabaseRole> access = new List<Classes.DatabaseRole>();
+      
+        public List<AccesAplicatie> appAccess= new List<AccesAplicatie>();
 
 
         DataTable umTable = new DataTable();
@@ -71,7 +72,17 @@ namespace LoginManager
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            WriteLog("Application started!");
+            try
+            {
+                File.AppendAllText(userCreationLog, 
+                    $"\nStarted session: {System.DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")}\n");
+            }
+            catch (Exception xcp)
+            {
+                MessageBox.Show("Eroare", $"Nu se poate scrie in fisierul {userCreationLog}, nu putem continua! {xcp.Message}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+                WriteLog("Application started!");
             try
             {
                 //throw new Exception("etst");
@@ -97,7 +108,7 @@ namespace LoginManager
                 createLogin = ConfigurationManager.AppSettings["CreateLogin"];
                 resetLogin = ConfigurationManager.AppSettings["ResetLogin"];
                 dropLogin = ConfigurationManager.AppSettings["DropLogin"];
-                
+
 
                 createDBUserForLogin = ConfigurationManager.AppSettings["CreateDBUserForLogin"];
                 addRoleMember = ConfigurationManager.AppSettings["AddRoleMember"];
@@ -105,14 +116,14 @@ namespace LoginManager
                 alterUserWithLogin = ConfigurationManager.AppSettings["AlterUserWithLogin"];
 
 
-                aplicatieList = ConfigurationManager.AppSettings["AplicatieList"];
-                tipAccessList = ConfigurationManager.AppSettings["TipAccesList"];
+                accesAplicatieList= ConfigurationManager.AppSettings["AccesAplicatieList"];
+                
                 int result = 0;
-                Int32.TryParse(ConfigurationManager.AppSettings["SuppressMessages"],out result);
+                Int32.TryParse(ConfigurationManager.AppSettings["SuppressMessages"], out result);
                 suppressMessages = result != 0;
-
-                LoadAplicatieCombobox();
-                LoadTipAccesCombobox();
+                LoadAccesAplicatieCombobox();
+                //LoadAplicatieCombobox();
+                //LoadTipAccesCombobox();
                 ReloadPeople();
                 LoadDepartamente();
             }
@@ -126,7 +137,7 @@ namespace LoginManager
             var numberOfSQLServers = Int32.Parse(ConfigurationManager.AppSettings["NumberOfSQLServers"]);
             for (int i = 0; i < numberOfSQLServers; i++)
             {
-                sqlServerConnectionStrings.Add(string.Format("SQLSERVER{0}", i + 1), ConfigurationManager.ConnectionStrings[string.Format("SQLServer{0}", i + 1)].ConnectionString);
+                sqlServerConnectionStrings.Add(string.Format("s{0}", i + 1), ConfigurationManager.ConnectionStrings[string.Format("s{0}", i + 1)].ConnectionString);
             }
         }
         private void LoadDepartamente()
@@ -379,12 +390,10 @@ namespace LoginManager
 
 
 
-
-
-        private void LoadAplicatieCombobox()
+        private void LoadAccesAplicatieCombobox()
         {
             DataTable dt;
-            var qAplicatie = string.Format(aplicatieList);
+            var qAplicatie = string.Format(accesAplicatieList);
 
             using (var connection = new SqlConnection(adminAplicConnectionString))
             {
@@ -392,81 +401,27 @@ namespace LoginManager
                 connection.Open();
                 using (var reader = command.ExecuteReader())
                 {
-
                     dt = new DataTable();
-
                     dt.Load(reader);
-
-
-
-
-
                 }
             }
-            apps.Add(new DatabaseApplication() { AppName = "", DBName = "", DBServer = "" });
+            appAccess.Add(new AccesAplicatie() { Acces = string.Empty,ConnectionString=string.Empty });
 
             foreach (DataRow row in dt.Rows)
             {
-                apps.Add(new DatabaseApplication() { AppName = row["AppName"].ToString(), DBName = row["DBName"].ToString(), DBServer = row["DBServer"].ToString(), ConnectionString = sqlServerConnectionStrings[row["DBServer"].ToString().ToUpper()] });
+                var acces= new AccesAplicatie() { Acces = row["Acces"].ToString() };
+                acces.ConnectionString = sqlServerConnectionStrings[acces.Server];
+                appAccess.Add(acces);
             }
 
-
-            //var emptyRow = dt.NewRow();
-            //emptyRow["BazaDate"] = -1;
-            //emptyRow["Aplicatie"] = string.Empty;
-            //dt.Rows.Add(emptyRow);
-            //var dv = new DataView(dt, "", "Aplicatie", DataViewRowState.CurrentRows);
-
-            //cmbAplicatie.DataSource = dv;
-            //cmbAplicatie.DisplayMember = "Aplicatie";
-            //cmbAplicatie.ValueMember = "BazaDate";
-
-            cmbAplicatie.DataSource = apps;
-            cmbAplicatie.DisplayMember = "AppName";
-            cmbAplicatie.ValueMember = "ConnectionInfo";
+            cmbAccesAplicatie.DataSource = appAccess;
+            cmbAccesAplicatie.DisplayMember = "Acces";
+            cmbAccesAplicatie.ValueMember = "Self";
 
 
-            cmbAplicatie.Refresh();
+            cmbAccesAplicatie.Refresh();
         }
 
-        private void LoadTipAccesCombobox()
-        {
-            DataTable dt;
-            var qtipAcces = string.Format(tipAccessList);
-
-            using (var connection = new SqlConnection(adminAplicConnectionString))
-            {
-                var command = new SqlCommand(qtipAcces, connection);
-                connection.Open();
-                using (var reader = command.ExecuteReader())
-                {
-
-                    dt = new DataTable();
-
-                    dt.Load(reader);
-
-
-                }
-            }
-            access.Add(new Classes.DatabaseRole() { Display = "", Value = "-1" });
-            foreach (DataRow row in dt.Rows)
-            {
-                access.Add(new Classes.DatabaseRole() { Value = row["DBRole"].ToString(), Display = row["Label"].ToString() });
-            }
-            //var emptyRow = dt.NewRow();
-            //emptyRow["DBRole"] = -1;
-            //emptyRow["Label"] = string.Empty;
-            //dt.Rows.Add(emptyRow);
-            //var dv = new DataView(dt, "", "Label", DataViewRowState.CurrentRows);
-
-            cmbTipAcces.DataSource = access;
-            cmbTipAcces.DisplayMember = "Display";
-            cmbTipAcces.ValueMember = "Value";
-
-
-
-            cmbTipAcces.Refresh();
-        }
 
         private void TxtSearch_KeyUp(object sender, KeyEventArgs e)
         {
@@ -722,19 +677,39 @@ namespace LoginManager
                 lblTipAcces.Text = gridRoles.Rows[e.RowIndex].Cells["drept_solicitat"].FormattedValue.ToString();
                 btnDeleteRole.Visible = true;
                 btnRevokeRole.Visible = true;
-                var app = apps.Where(a => a.AppName == lblAplicatie.Text).First();
+                var app = appAccess.Where(a => a.AppName == lblAplicatie.Text).FirstOrDefault();
+
+                if (app == null)
+                {
+                    WriteLog($"Nicio aplicatie cu acest nume({lblAplicatie.Text}) configurata in AplicatieList din fiserul de configurare!", 3);
+                    return;
+                }
+
+
                 lblServerInfo.Text = "      " + app.ConnectionString;
                 try
                 {
-                    lblServerInfoNoPass.Text = "      " + app.ConnectionString.Substring(0,app.ConnectionString.ToLower().LastIndexOf("password"));
+                    lblServerInfoNoPass.Text = "      " + app.ConnectionString.Substring(0, app.ConnectionString.ToLower().LastIndexOf("password"));
                 }
-                catch (Exception xcp) {
+                catch (Exception xcp)
+                {
                     lblServerInfoNoPass.Text = lblServerInfo.Text;
-                    WriteLog("Eroare ascundere parola: "+xcp.Message, 5);
+                    WriteLog("Warning ascundere parola: " + xcp.Message, 5);
                 }
                
-                CheckSQLLogin(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString);
-                CheckDatabaseRole(apps.Where(a => a.AppName == lblAplicatie.Text).First().ConnectionString.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName), access.Where(a => a.Display == lblTipAcces.Text).First().Value);
+              
+                CheckSQLLogin(app.ConnectionString);
+                var dbRole = appAccess.Where(a => a.AccessType.ToLower() == lblTipAcces.Text.ToLower()
+                &&
+                 a.AppName.ToLower() == lblAplicatie.Text.ToLower()
+                ).FirstOrDefault();
+                if (dbRole == null)
+                {
+                    WriteLog($"Niciun rol corespunzator tipului de acces({lblTipAcces.Text.ToLower()}) configurat in TipAccesList din fiserul de configurare!", 3);
+                    return;
+                }
+                CheckDatabaseRole(appAccess.Where(a => a.AppName.ToLower() == lblAplicatie.Text.ToLower()).First().ConnectionString.Replace("Initial Catalog=master", "Initial Catalog =" + appAccess.Where(a => a.AppName.ToLower() == lblAplicatie.Text.ToLower()).First().DbName),
+                   dbRole.DbRole );
 
 
             }
@@ -753,15 +728,16 @@ namespace LoginManager
 
             try
             {
-                if (((List<string>)cmbAplicatie.SelectedValue)[0] == string.Empty || cmbTipAcces.SelectedValue.ToString() == "-1")
+                var selectedApp = (AccesAplicatie)cmbAccesAplicatie.SelectedValue;
+                if (selectedApp.Acces == string.Empty )
                 {
                     MessageBox.Show("Selectati aplicatia si tipul de acces!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 WriteLog("Salvare permisiune in admin aplic...");
                 var qInsertUserRole = string.Format(insertUserRole, txtLogin.Text,
-                                        cmbAplicatie.Text,
-                                        cmbTipAcces.Text);
+                                        selectedApp.AppName,
+                                        selectedApp.AccessType);
                 WriteLog(qInsertUserRole, 1);
                 if (suppressMessages || MessageBox.Show(string.Format("Modificarile vor fi salvate!\nDoriti sa continuati?\n\n{0}", qInsertUserRole), "Adaugare rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                 {
@@ -801,7 +777,7 @@ namespace LoginManager
         private void CreateOrModifyLogin(string qCreateLogin)
         {
 
-            if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nNotati parola inainte de a continu!\nDoriti sa continuati?\n\n{0}", qCreateLogin), "Creare login", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nParola va fi salvata in fisierul de log!\nDoriti sa continuati?\n\n{0}", qCreateLogin), "Creare login", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Modificare login");
                 WriteLog(qCreateLogin, 1);
@@ -814,6 +790,16 @@ namespace LoginManager
                         command.ExecuteNonQuery();
                         btnCreateLogin.Visible = false;
                         WriteLog("OK!", 2);
+                        try
+                        {
+                            File.AppendAllText(userCreationLog,
+                                $"{txtLogin.Text};{txtPassword.Text};{txtCNP.Text};{txtUnitatea.Text}\n");
+                        }
+                        catch (Exception xcp)
+                        {
+                            MessageBox.Show("Eroare", $"Nu s-a putut scrie parola in fisierul {userCreationLog}, notati-o altundeva! {xcp.Message}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Application.Exit();
+                        }
 
                     }
                     catch (Exception xcp)
@@ -839,7 +825,10 @@ namespace LoginManager
             try
             {
 
-                txtPassword.Text = PasswordUtility.PasswordGenerator.PwGenerator.Generate(Int32.Parse(txtMinLength.Text), chkUpper.Checked, chkUseDigits.Checked, chkSpecialChars.Checked).ReadString().Replace("'", "-").Replace(";", "_");
+                txtPassword.Text = PasswordUtility.PasswordGenerator.PwGenerator.Generate(Int32.Parse(txtMinLength.Text), 
+                    chkUpper.Checked, 
+                    chkUseDigits.Checked, 
+                    chkSpecialChars.Checked).ReadString().Replace("'", "-").Replace(";", "_");
                 WriteLog(txtPassword.Text, 4);
             }
             catch (Exception)
@@ -886,7 +875,7 @@ namespace LoginManager
                 WriteLog("Creare user db...");
                 WriteLog(qCreateDbUser, 1);
 
-                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
+                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + appAccess.Where(a => a.AppName.ToLower() == lblAplicatie.Text.ToLower()).First().DbName)))
                 {
                     var command = new SqlCommand(qCreateDbUser, connection);
                     connection.Open();
@@ -919,7 +908,7 @@ namespace LoginManager
                 WriteLog("Creare user db...");
                 WriteLog(qAlterUSer, 1);
 
-                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
+                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + appAccess.Where(a => a.AppName.ToLower() == lblAplicatie.Text.ToLower()).First().DbName)))
                 {
                     var command = new SqlCommand(qAlterUSer, connection);
                     connection.Open();
@@ -941,13 +930,17 @@ namespace LoginManager
 
         private void AddDBRoleMember()
         {
-            var qAddRoleMember = string.Format(addRoleMember, access.Where(a => a.Display == lblTipAcces.Text).First().Value, txtLogin.Text);
+            var qAddRoleMember = string.Format(addRoleMember, appAccess.Where(a => a.AccessType.ToLower() == lblTipAcces.Text.ToLower()
+            && a.AppName.ToLower() == lblAplicatie.Text.ToLower()
+            )
+                .First().DbRole, txtLogin.Text);
             if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi adaugat in rol!\nDoriti sa continuati?\n\n{0}", qAddRoleMember), "Adaugare user in rol", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Creare role db...");
                 WriteLog(qAddRoleMember, 1);
 
-                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
+                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + appAccess.
+                    Where(a => a.AppName.ToLower() == lblAplicatie.Text.ToLower()).First().DbName)))
                 {
                     var command = new SqlCommand(qAddRoleMember, connection);
                     connection.Open();
@@ -973,12 +966,15 @@ namespace LoginManager
 
         private void BtnDropRole_Click(object sender, EventArgs e)
         {
-            var qDropRoleMember = string.Format(dropRoleMember, access.Where(a => a.Display == lblTipAcces.Text).First().Value, txtLogin.Text);
+            var qDropRoleMember = string.Format(dropRoleMember, appAccess.Where(a => a.AccessType.ToLower() == lblTipAcces.Text.ToLower()
+            &&
+            a.AppName.ToLower() == lblAplicatie.Text.ToLower()
+            ).First().DbRole, txtLogin.Text);
             if (suppressMessages || MessageBox.Show(string.Format("Comanda de mai jos va fi rulata!\nUserul va fi sters din rol!\nDoriti sa continuati?\n\n{0}", qDropRoleMember), "Stergere user din rol", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 WriteLog("Stergere rol db...");
                 WriteLog(qDropRoleMember, 1);
-                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + apps.Where(a => a.AppName == lblAplicatie.Text).First().DBName)))
+                using (var connection = new SqlConnection(lblServerInfo.Text.Replace("Initial Catalog=master", "Initial Catalog =" + appAccess.Where(a => a.AppName.ToLower() == lblAplicatie.Text.ToLower()).First().DbName)))
                 {
                     var command = new SqlCommand(qDropRoleMember, connection);
                     connection.Open();
@@ -1083,6 +1079,8 @@ namespace LoginManager
         private void BtnViewLog_Click(object sender, EventArgs e)
         {
             Process.Start(logFilename);
+
+            Process.Start(userCreationLog);
         }
 
         private void TextBox1_KeyUp(object sender, KeyEventArgs e)
@@ -1152,7 +1150,7 @@ namespace LoginManager
             DataTable newSource = new DataTable();
             foreach (DataColumn column in umTable.Columns)
             {
-                newSource.Columns.Add(column.ColumnName,column.DataType);
+                newSource.Columns.Add(column.ColumnName, column.DataType);
             }
 
 
@@ -1177,9 +1175,6 @@ namespace LoginManager
 
         }
 
-        private void Label22_Click(object sender, EventArgs e)
-        {
 
-        }
     }
 }

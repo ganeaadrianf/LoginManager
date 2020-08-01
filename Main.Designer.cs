@@ -60,13 +60,13 @@
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.gridRoles = new System.Windows.Forms.DataGridView();
+            this.cmbAccesAplicatie = new System.Windows.Forms.ComboBox();
             this.btnRevokeRole = new System.Windows.Forms.Button();
             this.btnAddRole = new System.Windows.Forms.Button();
-            this.cmbTipAcces = new System.Windows.Forms.ComboBox();
-            this.cmbAplicatie = new System.Windows.Forms.ComboBox();
             this.btnDeleteRole = new System.Windows.Forms.Button();
             this.lblAplicatie = new System.Windows.Forms.Label();
             this.lblTipAcces = new System.Windows.Forms.Label();
+            this.lblServerInfoNoPass = new System.Windows.Forms.Label();
             this.btnTestCredential = new System.Windows.Forms.Button();
             this.btnDeleteLogin = new System.Windows.Forms.Button();
             this.btnGeneratePassword = new System.Windows.Forms.Button();
@@ -122,7 +122,6 @@
             this.gridViewDepartamente = new System.Windows.Forms.DataGridView();
             this.logList = new System.Windows.Forms.ListView();
             this.Log = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lblServerInfoNoPass = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -489,10 +488,9 @@
             // 
             // splitContainer5.Panel2
             // 
+            this.splitContainer5.Panel2.Controls.Add(this.cmbAccesAplicatie);
             this.splitContainer5.Panel2.Controls.Add(this.btnRevokeRole);
             this.splitContainer5.Panel2.Controls.Add(this.btnAddRole);
-            this.splitContainer5.Panel2.Controls.Add(this.cmbTipAcces);
-            this.splitContainer5.Panel2.Controls.Add(this.cmbAplicatie);
             this.splitContainer5.Panel2.Controls.Add(this.btnDeleteRole);
             this.splitContainer5.Panel2.Controls.Add(this.lblAplicatie);
             this.splitContainer5.Panel2.Controls.Add(this.lblTipAcces);
@@ -542,6 +540,15 @@
             this.gridRoles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_CellClick);
             this.gridRoles.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridRoles_RowEnter);
             // 
+            // cmbAccesAplicatie
+            // 
+            this.cmbAccesAplicatie.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbAccesAplicatie.FormattingEnabled = true;
+            this.cmbAccesAplicatie.Location = new System.Drawing.Point(8, 13);
+            this.cmbAccesAplicatie.Name = "cmbAccesAplicatie";
+            this.cmbAccesAplicatie.Size = new System.Drawing.Size(179, 21);
+            this.cmbAccesAplicatie.TabIndex = 4;
+            // 
             // btnRevokeRole
             // 
             this.btnRevokeRole.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -569,24 +576,6 @@
             this.btnAddRole.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnAddRole.UseVisualStyleBackColor = true;
             this.btnAddRole.Click += new System.EventHandler(this.BtnAddRole_Click);
-            // 
-            // cmbTipAcces
-            // 
-            this.cmbTipAcces.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbTipAcces.FormattingEnabled = true;
-            this.cmbTipAcces.Location = new System.Drawing.Point(147, 13);
-            this.cmbTipAcces.Name = "cmbTipAcces";
-            this.cmbTipAcces.Size = new System.Drawing.Size(40, 24);
-            this.cmbTipAcces.TabIndex = 3;
-            // 
-            // cmbAplicatie
-            // 
-            this.cmbAplicatie.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbAplicatie.FormattingEnabled = true;
-            this.cmbAplicatie.Location = new System.Drawing.Point(8, 13);
-            this.cmbAplicatie.Name = "cmbAplicatie";
-            this.cmbAplicatie.Size = new System.Drawing.Size(133, 24);
-            this.cmbAplicatie.TabIndex = 2;
             // 
             // btnDeleteRole
             // 
@@ -621,6 +610,21 @@
             this.lblTipAcces.Size = new System.Drawing.Size(80, 17);
             this.lblTipAcces.TabIndex = 5;
             this.lblTipAcces.Text = "lblTipAcces";
+            // 
+            // lblServerInfoNoPass
+            // 
+            this.lblServerInfoNoPass.AutoSize = true;
+            this.lblServerInfoNoPass.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblServerInfoNoPass.Image = ((System.Drawing.Image)(resources.GetObject("lblServerInfoNoPass.Image")));
+            this.lblServerInfoNoPass.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblServerInfoNoPass.Location = new System.Drawing.Point(12, 10);
+            this.lblServerInfoNoPass.MaximumSize = new System.Drawing.Size(500, 0);
+            this.lblServerInfoNoPass.Name = "lblServerInfoNoPass";
+            this.lblServerInfoNoPass.Size = new System.Drawing.Size(77, 20);
+            this.lblServerInfoNoPass.TabIndex = 18;
+            this.lblServerInfoNoPass.Tag = "";
+            this.lblServerInfoNoPass.Text = "     con str";
+            this.lblServerInfoNoPass.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnTestCredential
             // 
@@ -816,7 +820,7 @@
             this.lblServerInfo.Location = new System.Drawing.Point(12, 4);
             this.lblServerInfo.MaximumSize = new System.Drawing.Size(500, 0);
             this.lblServerInfo.Name = "lblServerInfo";
-            this.lblServerInfo.Size = new System.Drawing.Size(166, 33);
+            this.lblServerInfo.Size = new System.Drawing.Size(166, 0);
             this.lblServerInfo.TabIndex = 7;
             this.lblServerInfo.Tag = "";
             this.lblServerInfo.Text = "     con str";
@@ -1279,22 +1283,6 @@
             this.Log.Text = "Log";
             this.Log.Width = 1200;
             // 
-            // lblServerInfoNoPass
-            // 
-            this.lblServerInfoNoPass.AutoSize = true;
-            this.lblServerInfoNoPass.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblServerInfoNoPass.Image = ((System.Drawing.Image)(resources.GetObject("lblServerInfoNoPass.Image")));
-            this.lblServerInfoNoPass.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblServerInfoNoPass.Location = new System.Drawing.Point(12, 10);
-            this.lblServerInfoNoPass.MaximumSize = new System.Drawing.Size(500, 0);
-            this.lblServerInfoNoPass.Name = "lblServerInfoNoPass";
-            this.lblServerInfoNoPass.Size = new System.Drawing.Size(77, 20);
-            this.lblServerInfoNoPass.TabIndex = 18;
-            this.lblServerInfoNoPass.Tag = "";
-            this.lblServerInfoNoPass.Text = "     con str";
-            this.lblServerInfoNoPass.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblServerInfoNoPass.Click += new System.EventHandler(this.Label22_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1379,8 +1367,6 @@
         private System.Windows.Forms.SplitContainer splitContainer5;
         private System.Windows.Forms.DataGridView gridRoles;
         private System.Windows.Forms.Button btnAddRole;
-        private System.Windows.Forms.ComboBox cmbTipAcces;
-        private System.Windows.Forms.ComboBox cmbAplicatie;
         private System.Windows.Forms.Button btnDeleteRole;
         private System.Windows.Forms.Label lblTipAcces;
         private System.Windows.Forms.Label lblAplicatie;
@@ -1439,6 +1425,7 @@
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label lblServerInfoNoPass;
+        private System.Windows.Forms.ComboBox cmbAccesAplicatie;
     }
 }
 
